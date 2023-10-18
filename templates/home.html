@@ -5,7 +5,12 @@
 {% endblock %}
 
 {% block main%}
-    <div class="savings-progress-container">
-
+    <div id="homeContainer">
+        <div class="savings-progress-container flex flex-col justify-center 
+        p-5 items-center">
+            <div class="label-center" id="savingsProgress"></div>
+            <button type="button" id="startProgress" class="bg-blue-500
+            text-2xl py-2 px-7 rounded-lg w-1/2 mt-8 text-slate-100">Start</button>
+        </div>
     </div>
 {% endblock %}

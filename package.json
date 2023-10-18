@@ -4,15 +4,9 @@
   "description": "",
   "main": "app.py",
   "scripts": {
-    "start": "python3 app.py",
-    "build": "tailwind -i ./static/css/styles.css -o ./static/css/styles_main.css",
-    "watch": "tailwind -i ./static/css/styles.css -o ./static/css/styles_main.css --watch"
+    "start": "python3 app.py"
   },
   "keywords": [],
-  "author": "Ry2uko",
-  "license": "MIT",
-  "dependencies": {
-    "jquery": "^3.7.1",
-    "tailwindcss": "^3.3.3"
-  }
+  "author": "",
+  "license": "ISC"
 }
