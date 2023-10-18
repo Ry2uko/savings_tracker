@@ -1,0 +1,17 @@
+{
+  "name": "savings_tracker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tailwind -i ./css/styles.css -o ./css/styles_main.css",
+    "watch": "tailwind -i ./css/styles.css -o ./css/styles_main.css --watch"
+  },
+  "keywords": [],
+  "author": "Ry2uko",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "^3.7.1",
+    "tailwindcss": "^3.3.3"
+  },
+  "description": ""
+}
