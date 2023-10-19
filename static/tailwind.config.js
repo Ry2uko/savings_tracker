@@ -8,10 +8,13 @@ module.exports = {
       xl: '1440px',
     },
     extend: {
-      colors: {},
+      colors: {
+        
+      },
     },
     fontFamily: {
       'lato': ['Lato', 'sans-serif'],
+      'yanone-kaffeesatz': ['Yanone Kaffeesatz', 'sans-serif'],
     }
   },
   plugins: [],

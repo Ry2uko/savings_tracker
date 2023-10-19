@@ -5,12 +5,29 @@
 {% endblock %}
 
 {% block main%}
-    <div id="homeContainer">
-        <div class="savings-progress-container flex flex-col justify-center 
-        p-5 items-center">
-            <div class="label-center" id="savingsProgress"></div>
-            <button type="button" id="startProgress" class="bg-blue-500
-            text-2xl py-2 px-7 rounded-lg w-1/2 mt-8 text-slate-100">Start</button>
+    <div id="homeContainer" class="flex flex-col h-full py-8 overflow-y-auto">
+        <div class="bank-title-container text-center">
+            <h2 class="text-[3rem] font-yanone-kaffeesatz">Bank Title</h2>
+        </div>
+        <div class="bank-container flex flex-col flex-1 items-center pt-6">
+            <div class="bank-savings-container flex flex-col justify-center 
+            my-4 items-center">
+                <div class="label-center" id="savingsProgress"></div>
+            </div>
+            <div class="bank-btn-container mt-8 w-full flex justify-center">
+                <div class="input-container relative h-[50px] w-[200px] flex">
+                    <button type="button" id="addSavingBtn" class="rounded-full
+                  bg-blue-500 text-zinc-950 shadow-d h-full 
+                  px-5 text-[1.4rem] absolute">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                    <input type="text" id="savingAmountInput" class="rounded-full
+                    h-full w-full border pl-[75px] pr-[20px] text-[1.4rem] font-lato 
+                    focus:outline-none" 
+                    placeholder="₱00.00"/>
+                </div>
+            </div>
+            
         </div>
     </div>
 {% endblock %}

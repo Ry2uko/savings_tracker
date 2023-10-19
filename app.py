@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import os
@@ -15,9 +15,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
-@app.route('/')
+@app.route('/home')
 def index():
     return render_template('home.html')
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return redirect('/home')
 
 
 if __name__ == '__main__':
