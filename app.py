@@ -15,9 +15,26 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
+
 @app.route('/home')
-def index():
+def home():
     return render_template('home.html')
+
+
+@app.route('/stats')
+def stats():
+    return render_template('stats.html')
+
+
+@app.route('/banks')
+def banks():
+    return render_template('banks.html')
+
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
+
 
 @app.errorhandler(404)
 def page_not_found(e):

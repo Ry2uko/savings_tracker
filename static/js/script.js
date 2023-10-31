@@ -1,11 +1,11 @@
 const barAnimDuration = 500; // ms
 
 let addSavingBtnLock = false;
-let maxAmount = 1500, amountSaved = 0;
+let maxAmount = 300000, amountSaved = 0;
 let bar;
 
 $(function(){
-  console.log('Document Ready!'); 
+  console.log('Document Ready!');  
 
   initializeMain();
 

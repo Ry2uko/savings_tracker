@@ -1,19 +1,17 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Index
+    Home
 {% endblock %}
 
 {% block main%}
     <div id="homeContainer" class="flex flex-col h-full py-8 overflow-y-auto">
-        <div class="bank-title-container text-center">
-            <h2 class="text-[3rem] font-yanone-kaffeesatz">Bank Title</h2>
-        </div>
-        <div class="bank-container flex flex-col flex-1 items-center pt-6">
+        <div class="bank-container flex flex-col flex-1 items-center">
             <div class="bank-savings-container flex flex-col justify-center 
             my-4 items-center">
                 <div class="label-center" id="savingsProgress"></div>
             </div>
+
             <div class="bank-btn-container mt-8 w-full flex justify-center">
                 <div class="input-container relative h-[50px] w-[200px] flex">
                     <button type="button" id="addSavingBtn" class="rounded-full
@@ -27,7 +25,11 @@
                     placeholder="₱00.00"/>
                 </div>
             </div>
-            
+
+            <div class="bank-details-container">
+
+            </div>
+
         </div>
     </div>
 {% endblock %}
