@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from datetime import datetime
+from dateutil.parser import parse
 import os
+import pytz
 
 # Initialize app
 app = Flask(__name__)
@@ -14,6 +17,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
+
+with app.app_context():
+    #db.drop_all()
+    db.create_all() 
 
 
 # Saving Class/Model
@@ -39,9 +46,6 @@ class SavingSchema(ma.Schema):
         fields = ('id', 'name', 'amount_saved', 'amount_goal', 'created_date', 
         'goal_completed_date', 'is_goal_completed')
 
-with app.app_context():
-    # db.drop_all()
-    db.create_all() 
 
 # Initialize Schema
 saving_schema = SavingSchema()
@@ -57,6 +61,10 @@ def savings_api():
     if request.method == 'GET':
         all_savings = Saving.query.all()
         result = savings_schema.dump(all_savings)
+
+        tz = request.args.get('tz')
+        if tz:
+            parse_time_zone(tz, result)
 
         return jsonify(result)
     elif request.method == 'POST':
@@ -207,6 +215,26 @@ def page_not_found(e):
 
 def handle_err(msg, status=400):
     return (jsonify({'error': msg}), status)
+
+
+def parse_time_zone(tz, savings):
+    try:
+        user_timezone = pytz.timezone(tz) 
+    except pytz.UnknownTimeZoneError:
+        return
+
+    for saving in savings:
+        # Convert dates to user timezone
+        created_date = datetime.fromisoformat(saving['created_date'])
+        created_date = created_date.astimezone(user_timezone)
+        print(created_date)
+        saving['created_date'] = created_date.strftime("%Y-%m-%d %H:%M:%S%z")
+
+        if saving['goal_completed_date']:
+            goal_completed_date = datetime.fromisoformat(saving['goal_completed_date'])
+            goal_completed_date = goal_completed_date.astimezone(user_timezone)
+            saving['goal_completed_date'] = goal_completed_date.strftime("%Y-%m-%d %H:%M:%S%z")
+
 
 
 if __name__ == '__main__':
