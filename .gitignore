@@ -1,2 +1,5 @@
 node_modules
 static/node_modules
+*.sqlite
+*.db
+*.sql
