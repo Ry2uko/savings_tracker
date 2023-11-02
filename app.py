@@ -18,10 +18,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
-with app.app_context():
-    #db.drop_all()
-    db.create_all() 
-
 
 # Saving Class/Model
 class Saving(db.Model):
@@ -31,30 +27,42 @@ class Saving(db.Model):
     name = db.Column(db.String(100), nullable=False)
     amount_saved = db.Column(db.Integer, default=0) 
     amount_goal = db.Column(db.Integer, nullable=False)
-    created_date = db.Column(db.DateTime, default=db.func.now())
+    created_date = db.Column(db.DateTime, default=datetime.now)
     goal_completed_date = db.Column(db.DateTime)
+    currency = db.Column(db.String, default='PHP')
     is_goal_completed = db.Column(db.Boolean, default=False)
+    history = db.Column(db.String, default='')
 
     def __init__(self, name, amount_goal):
         self.name = name
         self.amount_goal = amount_goal
-
+    
 
 # Saving Schema
 class SavingSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name', 'amount_saved', 'amount_goal', 'created_date', 
-        'goal_completed_date', 'is_goal_completed')
+        'goal_completed_date', 'is_goal_completed', 'history', 'currency')
 
 
-# Initialize Schema
+# Initialize Saving Schema
 saving_schema = SavingSchema()
 savings_schema = SavingSchema(many=True)
+
+
+# Initialize db
+with app.app_context():
+    # db.drop_all()
+    db.create_all() 
+
+# Settings
+supported_currency_codes = ["USD", "PHP", "EUR", "JPY", "GBP", "CAD", "AUD"]
 
 
 @app.route('/home')
 def home():
     return render_template('home.html')
+
 
 @app.route('/savings/api', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def savings_api():
@@ -97,11 +105,14 @@ def savings_api():
             return handle_err('No id.')
 
         id = request.json['id']
-        saving = Saving.query.get(id)
+        saving = db.session.get(Saving, id)
         if saving == None:
             return handle_err('Id not found.', 404)
 
         # Validate updates
+        if 'added_amount' in request.json and 'subtracted_amount' in request.json:
+            return handle_err('added_amount and subtracted_amount cannot be used together.')
+    
         if 'added_amount' in request.json:
             # If goal has already been completed
             if saving.is_goal_completed:
@@ -116,12 +127,49 @@ def savings_api():
             except ValueError:
                 return handle_err('Invalid added amount.')
 
+            # Add to history
+            history_entry = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}:+{added_amount}'
+            history_list = saving.history.split(',') if saving.history else []
+            history_list.append(history_entry)
+            saving.history = ','.join(history_list)
+
             saving.amount_saved += added_amount
             saving.amount_saved = round(saving.amount_saved, 2)
+
             # If user reached the amount goal
             if saving.amount_saved >= saving.amount_goal:
                 saving.is_goal_completed = True
-                saving.goal_completed_date = db.func.now()
+                saving.goal_completed_date = datetime.now()
+
+        if 'subtracted_amount' in request.json:
+            # If goal has already been completed
+            if saving.amount_saved <= 0:
+                return handle_err('Nothing to subtract.')
+
+            subtracted_amount = request.json['subtracted_amount']
+
+            try:
+                subtracted_amount = float(subtracted_amount)
+                if subtracted_amount <= 0:
+                    raise ValueError
+            except ValueError:
+                return handle_err('Invalid subtracted amount.')
+
+            if subtracted_amount > saving.amount_saved:
+                return handle_err('Not enough saving amount.')
+
+            if saving.is_goal_completed and (saving.amount_saved-subtracted_amount) < saving.amount_goal:
+                saving.is_goal_completed = False
+                saving.goal_completed_date = None
+
+            # Add to history
+            history_entry = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}:-{subtracted_amount}'
+            history_list = saving.history.split(',') if saving.history else []
+            history_list.append(history_entry)
+            saving.history = ','.join(history_list)
+
+            saving.amount_saved -= subtracted_amount
+            saving.amount_saved = round(saving.amount_saved, 2)
 
         if 'name' in request.json:
             name = request.json['name']
@@ -149,27 +197,14 @@ def savings_api():
 
             saving.amount_goal = amount_goal
 
-        if 'amount_saved' in request.json:
-            if 'added_amount' in request.json:
-                return handle_err("Don't use 'amount_saved' and 'added_amount' together.")
-
-            amount_saved = request.json['amount_saved']
-
-            try:
-                amount_saved = float(amount_saved)
-                if amount_saved < 0:
-                    raise ValueError
-                elif amount_saved >= saving.amount_goal:
-                    return handle_err('Amount saved should be lower than amount goal.')
-            except ValueError:
-                return handle_err('Invalid amount.')
-
-            # If goal has already been reached
-            if saving.is_goal_completed:
-                saving.is_goal_completed = False
-                saving.goal_completed_date = None
-
-            saving.amount_saved = amount_saved
+        if 'currency' in request.json:
+            currency = request.json['currency']
+            if not currency:
+                return handle_err('Invalid currency.')
+            elif currency.upper() not in supported_currency_codes:
+                return handle_err(f"Currency not supported. Supported currencies: {', '.join(supported_currency_codes)}")
+            
+            saving.currency = currency
 
         db.session.commit()
 
@@ -183,7 +218,7 @@ def savings_api():
         if not id:
             return handle_err('Invalid id.')
         
-        saving = Saving.query.get(id)
+        saving = db.session.get(Saving, id)
         if saving == None:
             return handle_err('Id not found.', 404)
 
@@ -234,7 +269,6 @@ def parse_time_zone(tz, savings):
             goal_completed_date = datetime.fromisoformat(saving['goal_completed_date'])
             goal_completed_date = goal_completed_date.astimezone(user_timezone)
             saving['goal_completed_date'] = goal_completed_date.strftime("%Y-%m-%d %H:%M:%S%z")
-
 
 
 if __name__ == '__main__':
