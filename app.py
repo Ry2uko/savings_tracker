@@ -52,7 +52,7 @@ savings_schema = SavingSchema(many=True)
 
 # Initialize db
 with app.app_context():
-    # db.drop_all()
+    db.drop_all()
     db.create_all() 
 
 # Settings
@@ -230,7 +230,11 @@ def savings_api():
 
 @app.route('/savings')
 def savings():
-    return render_template('savings.html')
+    all_savings = Saving.query.all()
+    result = savings_schema.dump(all_savings)
+    savings = [saving['name'] for saving in result]
+    print(savings)
+    return render_template('savings.html', savings=savings)
 
 
 @app.route('/stats')

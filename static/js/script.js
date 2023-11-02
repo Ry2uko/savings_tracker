@@ -1,14 +1,13 @@
 const barAnimDuration = 500; // ms
 
 let addSavingBtnLock = false;
-let maxAmount = 300000, amountSaved = 0;
 let bar;
 
 $(function(){
   console.log('Document Ready!');  
 
   initializeMain();
-
+  /*
   $('#addSavingBtn').on('click', () => {
     // disable btn click while animation is not finished
     if (addSavingBtnLock) return;
@@ -28,6 +27,7 @@ $(function(){
     console.log(amountSaved, inputValue, amountSaved);
     bar.set(amountSaved, true);
   });
+  */
 });
 
 function initializeMain() {
@@ -38,8 +38,7 @@ function initializeMain() {
     'stroke-width': 5,
     'duration': (barAnimDuration/1000),
     'min': 0,
-    'value': 0,
-    'max': maxAmount,
+    'value': 45,
   });
 
   addSavingBtnLock = false;

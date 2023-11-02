@@ -16,24 +16,18 @@
         </div>
         <div class="savings-container grid grid-cols-1 justify-between mx-7 text-center
          gap-y-6 mt-2 py-5 md:grid-cols-2 md:mt-0 md:gap-y-4 md:gap-x-5">
-            <div class="bg-white border border-gray-200 text-black drop-shadow-sm 
-            cursor-pointer px-5 py-6 rounded-md transition duration-150 hover:border-gray-400 text-[1.4rem]">saving Name</div>
-            <div class="bg-white border border-gray-200 text-black drop-shadow-sm 
-            cursor-pointer px-5 py-6 rounded-md transition duration-150 hover:border-gray-400 text-[1.4rem]">saving Name</div>
-            <div class="bg-white border border-gray-200 text-black drop-shadow-sm 
-            cursor-pointer px-5 py-6 rounded-md transition duration-150 hover:border-gray-400 text-[1.4rem]">saving Name</div>
-            <div class="bg-white border border-gray-200 text-black drop-shadow-sm 
-            cursor-pointer px-5 py-6 rounded-md transition duration-150 hover:border-gray-400 text-[1.4rem]">saving Name</div>
-            <div class="bg-white border border-gray-200 text-black drop-shadow-sm 
-            cursor-pointer px-5 py-6 rounded-md transition duration-150 hover:border-gray-400 text-[1.4rem]">saving Name</div>
-            <div class="bg-white border border-gray-200 text-black drop-shadow-sm 
-            cursor-pointer px-5 py-6 rounded-md transition duration-150 hover:border-gray-400 text-[1.4rem]">saving Name</div>
-            <div class="bg-white border border-gray-200 text-black drop-shadow-sm 
-            cursor-pointer px-5 py-6 rounded-md transition duration-150 hover:border-gray-400 text-[1.4rem]">saving Name</div>
-            <div class="bg-white border border-gray-200 text-black drop-shadow-sm 
-            cursor-pointer px-5 py-6 rounded-md transition duration-150 hover:border-gray-400 text-[1.4rem]">saving Name</div>
-            <div class="bg-white border border-gray-200 text-black drop-shadow-sm 
-            cursor-pointer px-5 py-6 rounded-md transition duration-150 hover:border-gray-400 text-[1.4rem]">saving Name</div>
+
+            {% if savings %}
+                {% for saving_name in savings %}
+                    <div class="bg-white border border-gray-200 text-black drop-shadow-sm 
+                cursor-pointer px-5 py-6 rounded-md transition duration-150 hover:border-gray-400 text-[1.4rem]">
+                        {{ saving_name }}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <span class="empty-message font-lato text-slate-500 text-xl">Ready to save?</span>
+            {% endif %}
+            
         </div>
     </div>
 {% endblock %}

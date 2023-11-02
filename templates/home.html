@@ -5,29 +5,56 @@
 {% endblock %}
 
 {% block main%}
-    <div id="homeContainer" class="flex flex-col h-full py-8 overflow-y-auto">
+    <div id="homeContainer" class="flex flex-col h-full py-8 overflow-y-auto relative">
         <div class="saving-container flex flex-col flex-1 items-center">
+            <button type="button" class="absolute top-0 right-0 bg-green-500
+            pl-6 pr-2 pb-6 pt-2 z-[99] rounded-bl-full transition ease-out duration-50 
+            text-2xl cursor-pointer hover:scale-[1.10] hover:translate-x-[-2px] hover:translate-y-[2px]
+            md:pl-8 md:pr-4 md:pb-8 md:pt-4"
+            id="addSaving">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            
+            <button type="button" class="absolute hidden top-0 left-0 bg-red-500
+            pr-8 pl-4 pb-8 pt-4 z-[99] cursor-pointer rounded-br-full transition ease-out duration-50 
+            text-2xl hover:scale-[1.10] hover:translate-x-[2px] hover:translate-y-[2px]
+            md:block" id="removeSavingA">
+                <i class="fa-solid fa-minus"></i>
+            </button>
+
+            <button type="button" class="absolute right-0 top-[80px] bg-red-500
+            pl-6 pr-2 py-4 rounded-l-full z-[99] cursor-pointer transition ease-out duration-50 
+            text-2xl hover:scale-[1.10] hover:translate-x-[-2px] md:hidden" id="removeSavingB">
+                <i class="fa-solid fa-minus"></i>
+            </button>
+
             <div class="saving-savings-container flex flex-col justify-center 
-            my-4 items-center">
+            my-10 items-center sm:my-8 lg:my-6">
                 <div class="label-center" id="savingsProgress"></div>
             </div>
 
-            <div class="saving-btn-container mt-8 w-full flex justify-center">
-                <div class="input-container relative h-[50px] w-[200px] flex">
-                    <button type="button" id="addSavingBtn" class="rounded-full
-                  bg-blue-500 text-zinc-950 shadow-d h-full 
-                  px-5 text-[1.4rem] absolute">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
-                    <input type="text" id="savingAmountInput" class="rounded-full
-                    h-full w-full border pl-[75px] pr-[20px] text-[1.4rem] font-lato 
-                    focus:outline-none" 
-                    placeholder="₱00.00"/>
+            <div class="saving-details-container flex flex-col bg-white border
+             border-slate-400 rounded-lg mt-[2rem] py-4 px-6 w-8/12 max-w-[600px] sm:mt-[1.5rem]">
+                <div class="flex justify-between border-b border-slate-300 
+                pb-1 text-xl font-lato rounded-sm my-1">
+                    <span class="text-blue-600">Name</span>
+                    <span id="savingName">Fiery Heights III</span>
                 </div>
-            </div>
-
-            <div class="saving-details-container">
-
+                <div class="flex justify-between border-b border-slate-300 
+                pb-1 text-xl font-lato rounded-sm my-1">
+                    <span class="text-blue-600">Amount Goal</span>
+                    <span id="savingAmountGoal">₱1,500.00</span>
+                </div>
+                <div class="flex justify-between border-b border-slate-300 
+                pb-1 text-xl font-lato rounded-sm my-1">
+                    <span class="text-blue-600">Amount Saved</span>
+                    <span id="savingAmountSaved">₱0.00</span>
+                </div>
+                <div class="flex justify-between border-b border-slate-300 
+                pb-1 text-xl font-lato rounded-sm my-1">
+                    <span class="text-blue-600">Remaining</span>
+                    <span id="savingRemaining">₱1,500.00</span>
+                </div>
             </div>
 
         </div>

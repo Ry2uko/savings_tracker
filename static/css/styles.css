@@ -17,14 +17,45 @@ body, html {
 }
 
 #homeContainer #savingsProgress {
-    width: 500px !important;
-    height: 500px !important;
-    font-size: 2.6rem;
+    width: 380px !important;
+    height: 380px !important;
 }
 
-.ldBar-label::after {
-    margin-left: 3px;
-    content: "php" !important;
-    font-size: 1.6rem;
-    color: #4e4e4e;
+#homeContainer #savingsProgress path.mainline {
+    stroke-width: 5;
+    stroke: #2563EB;
+}
+
+#homeContainer #savingsProgress path.baseline {
+    stroke-width: 5;
+}
+
+.ldBar-label {
+    font-size: 3rem;
+    opacity: 0.9;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+}
+
+/* sm */
+@media screen and (min-width: 480px) {
+    #homeContainer #savingsProgress {
+        width: 430px !important;
+        height: 430px !important;
+    }
+}
+
+/* md */
+@media screen and (min-width: 768px) {
+    #homeContainer #savingsProgress {
+        width: 450px !important;
+        height: 450px !important;
+    }
+}
+
+/* lg */
+@media screen and (min-width: 976px) {
+    #homeContainer #savingsProgress {
+        width: 520px !important;
+        height: 520px !important;
+    }
 }
