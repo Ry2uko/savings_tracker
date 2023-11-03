@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato&family=Yanone+Kaffeesatz&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Noto+Sans&family=Yanone+Kaffeesatz&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -11,9 +11,24 @@
 }
 
 body, html {
+    background-color: #000;
     width: 100%;
     height: 100vh;
-    overflow-x: hidden
+    overflow-x: hidden;
+    position: relative;
+}
+
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 100;
+    background: #fff;
+    transform: translate(-50%, -50%);
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    width: 90%;
+    height: 600px;
+    border-radius: 0.4rem;
 }
 
 #homeContainer #savingsProgress {
@@ -42,6 +57,10 @@ body, html {
         width: 430px !important;
         height: 430px !important;
     }
+
+    .modal {
+        max-width: 520px;
+    }
 }
 
 /* md */
@@ -49,6 +68,12 @@ body, html {
     #homeContainer #savingsProgress {
         width: 450px !important;
         height: 450px !important;
+    }
+
+    .modal {
+        max-width: 700px;
+        width: 700px;
+        height: 700px;
     }
 }
 

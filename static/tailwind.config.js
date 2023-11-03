@@ -15,6 +15,7 @@ module.exports = {
     fontFamily: {
       'lato': ['Lato', 'sans-serif'],
       'yanone-kaffeesatz': ['Yanone Kaffeesatz', 'sans-serif'],
+      'noto-sans': ['Noto Sans', 'sans-serif']
     }
   },
   plugins: [],

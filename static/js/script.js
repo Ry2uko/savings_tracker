@@ -1,4 +1,5 @@
 const barAnimDuration = 500; // ms
+const modalAnimMS = 250;
 
 let addSavingBtnLock = false;
 let bar;
@@ -6,7 +7,41 @@ let bar;
 $(function(){
   console.log('Document Ready!');  
 
-  initializeMain();
+  $('#newSaving').on('click', () => {
+    $('.parent-container').css({
+      'pointerEvents': 'none',
+      'userSelect': 'none',
+    }).animate({
+      'opacity': 0.8,
+    }, modalAnimMS);
+
+    $('#addSavingModal').css({
+      'display': 'flex',
+    }).animate({
+      'opacity': 1,
+    }, modalAnimMS);
+  });
+
+  $('#closeAddSavingModal').on('click', () => {
+    $('.parent-container').animate({
+      'opacity': 1,
+    }, modalAnimMS, function(){
+      $(this).css({
+        'pointerEvents': 'auto',
+        'userSelect': 'auto',
+      });
+    });
+
+    $('#addSavingModal').animate({
+      'opacity': 0,
+    }, modalAnimMS, function(){
+      $(this).css({
+        'display': 'none',
+      });
+    });
+
+  });
+
   /*
   $('#addSavingBtn').on('click', () => {
     // disable btn click while animation is not finished
@@ -28,6 +63,7 @@ $(function(){
     bar.set(amountSaved, true);
   });
   */
+  initializeMain();
 });
 
 function initializeMain() {
