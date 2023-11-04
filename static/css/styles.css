@@ -45,6 +45,10 @@ body, html {
     stroke-width: 5;
 }
 
+#savingsContainer .saving-item.active {
+    border: 2px solid  #326debda;
+}
+
 .ldBar-label {
     font-size: 3rem;
     opacity: 0.9;

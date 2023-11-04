@@ -4,6 +4,47 @@
     Savings
 {% endblock %}
 
+{% block modal %}
+    <div id="addSavingModal" class="modal flex-col hidden opacity-0">
+        <button type="button" class="absolute top-0 right-0 my-1 mx-3
+        text-[1.7rem] cursor-pointer p-1" id="closeAddSavingModal">
+            <i class="fa-solid fa-xmark text-slate-800"></i>
+        </button>
+
+        <div class="form-header-container pt-6 pb-4 border-b-2 border-b-slate-200 ">
+            <h4 class="text-[2.3rem] font-yanone-kaffeesatz 
+            text-center md:text-[2.6rem]">Add Saving</h4>
+        </div>
+
+        <div class="form-container flex flex-col font-lato px-8 flex-1 justify-start pt-10">
+            <div class="input-container flex flex-col mb-12">
+                <label for="savingNameInput" class="text-2xl mb-2">Name</label>
+                <input type="text" id="savingNameInput" class="block bg-white 
+                border border-slate-300 rounded-md py-3 px-4 text-[1.4rem] 
+                focus:outline-none focus:border-slate-600"/>
+            </div>
+            <div class="input-container flex flex-col mb-12">
+                <label for="savingAmountGoalInput" class="text-2xl mb-2">Amount Goal</label>
+                <input type="text" id="savingAmountGoalInput" class="block bg-white 
+                border border-slate-300 rounded-md py-3 px-4 text-[1.4rem]
+                focus:outline-none focus:border-slate-600" />
+            </div>
+            <span class="hidden text-center text-2xl font-noto-sans mt-6
+             text-red-600 error-text" id="addSavingErrorText">I am a placeholder :)</span>
+        </div>
+
+        <div class="form-submit-btn-container border-t-2
+        border-t-slate-200 flex justify-end py-8">
+            <button type="button" id="submitAddSavingForm" class=" mr-8
+            rounded-md font-noto-sans text-xl py-2 px-8 border-2 text-blue-700
+            bg-white border-blue-500 transition ease-linear duration-200 hover:bg-blue-500
+            hover:text-white">
+                Add
+            </button>
+        </div>
+    </div>
+{% endblock %}
+
 {% block main %}
     <div id="savingsContainer" class="flex flex-col h-full py-8 overflow-y-auto mt-[4rem] md:mt-0">
         <div class="header-container mx-7 flex items-center md:mx-10">
@@ -19,7 +60,8 @@
             gap-y-6 mt-2 py-5 md:grid-cols-2 md:mt-0 md:gap-y-4 md:gap-x-5">
                 {% for saving_name in savings %}
                     <div class="bg-white border border-gray-200 text-black drop-shadow-sm 
-                cursor-pointer px-5 py-6 rounded-md transition duration-150 hover:border-gray-400 text-[1.4rem]">
+                    cursor-pointer px-5 py-6 rounded-md transition duration-150
+                    saving-item hover:border-gray-400 text-[1.4rem]">
                         {{ saving_name }}
                     </div>
                 {% endfor %}
@@ -28,4 +70,8 @@
             <span class="empty-message font-lato text-slate-500 text-xl text-center mt-[2rem]">Ready to save?</span>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="static/js/savings.js"></script>
 {% endblock %}

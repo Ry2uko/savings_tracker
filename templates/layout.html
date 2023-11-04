@@ -12,43 +12,7 @@
     </head>
     <body>
         <!-- Modals -->
-        <div id="addSavingModal" class="modal flex-col hidden opacity-0">
-            <buton type="button" class="absolute top-0 right-0 my-1 mx-3
-            text-[1.7rem] cursor-pointer p-1" id="closeAddSavingModal">
-                <i class="fa-solid fa-xmark text-slate-800"></i>
-            </buton>
-
-            <div class="form-header-container pt-6 pb-4 border-b-2 border-b-slate-200 ">
-                <h4 class="text-[2.3rem] font-yanone-kaffeesatz 
-                text-center md:text-[2.6rem]">Add Saving</h4>
-            </div>
-
-            <div class="form-container flex flex-col font-lato px-8 flex-1 justify-start pt-10">
-                <div class="input-container flex flex-col mb-12">
-                    <label for="savingNameInput" class="text-2xl mb-2">Name</label>
-                    <input type="text" id="savingNameInput" class="block bg-white 
-                    border border-slate-300 rounded-md py-2 px-3 text-xl 
-                    focus:outline-none focus:border-slate-600"/>
-                </div>
-                <div class="input-container flex flex-col mb-12">
-                    <label for="savingAmountGoalInput" class="text-2xl mb-2">Amount Goal</label>
-                    <input type="number" id="savingAmountGoalInput" class="block bg-white 
-                    border border-slate-300 rounded-md py-2 px-3 text-xl 
-                    focus:outline-none focus:border-slate-600" />
-                </div>
-                <span class="hidden text-center text-2xl font-noto-sans mt-6 text-red-600" id="addSavingErrorText">I am a placeholder :)</span>
-            </div>
-
-            <div class="form-submit-btn-container border-t-2
-            border-t-slate-200 flex justify-end py-8">
-                <button type="button" id="submitAddSavingForm" class=" mr-8
-                rounded-md font-noto-sans text-xl py-2 px-8 border-2 text-blue-700
-                bg-white border-blue-500 transition ease-linear duration-200 hover:bg-blue-500
-                hover:text-white">
-                    Add
-                </button>
-            </div>
-        </div>
+        {% block modal %}{% endblock %}
         <!-- *** -->
 
         <div class="parent-container bg-slate-100 w-full h-full flex flex-row relative">
@@ -84,7 +48,9 @@
                 {% block main %}{% endblock %}
             </div>
         </div>
+
         <script type="text/javascript" src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') }}"></script>
-        <script type="text/javascript" src="static/js/script.js"></script>
+        <script type="text/javascript" src="static/js/index.js"></script>
+        {% block script %}{% endblock %}
     </body>
 </html>

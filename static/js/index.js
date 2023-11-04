@@ -4,43 +4,67 @@ const modalAnimMS = 250;
 let addSavingBtnLock = false;
 let bar;
 
-$(function(){
-  console.log('Document Ready!');  
+/* TO DO: (THIS WEEK)
+- validation for new saving, submitting, & handling
 
-  $('#newSaving').on('click', () => {
+- add and subtract to saving btn inputs / modals?
+- validation, submitting, & handling + animations
+- + responsive design?
+
+- modal for mobile navbar
+- Getting from API & Submitting + Handling (details, progresbar, animations, etc.)
+- handle loading (none loaded, sessions, etc.)
+*/
+
+/* (NEXT WEEK) 
+- stats
+- settings
+- bug checking & testing
+- video making
+*/
+
+function toggleModal(modalId, ms=modalAnimMS) {
+  const modal = $(`#${modalId}`);
+
+  if (modal.css('display') == 'none') {
     $('.parent-container').css({
       'pointerEvents': 'none',
       'userSelect': 'none',
     }).animate({
       'opacity': 0.8,
-    }, modalAnimMS);
+    }, ms);
 
-    $('#addSavingModal').css({
+    modal.css({
       'display': 'flex',
     }).animate({
       'opacity': 1,
-    }, modalAnimMS);
-  });
-
-  $('#closeAddSavingModal').on('click', () => {
+    }, ms);
+  } else {
     $('.parent-container').animate({
       'opacity': 1,
-    }, modalAnimMS, function(){
+    }, ms, function(){
       $(this).css({
         'pointerEvents': 'auto',
         'userSelect': 'auto',
       });
+      $('.error-text').addClass('hidden');
     });
 
-    $('#addSavingModal').animate({
+    modal.animate({
       'opacity': 0,
-    }, modalAnimMS, function(){
+    }, ms, function(){
       $(this).css({
         'display': 'none',
       });
     });
+  }
+}
 
-  });
+$(function(){
+  console.log('Document Ready!');  
+
+  // clean inputs
+  $('input[type="text"]').val('');
 
   /*
   $('#addSavingBtn').on('click', () => {
