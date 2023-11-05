@@ -1,7 +1,7 @@
-from flask import Flask, request, jsonify, render_template, redirect
+from flask import Flask, request, jsonify, render_template, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.parser import parse
 import os
 import pytz
@@ -10,10 +10,14 @@ import pytz
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+app.secret_key = ""
+
 # Setup Database
 db_name = 'savings.sqlite'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, db_name)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.urandom(12).hex()
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -52,7 +56,7 @@ savings_schema = SavingSchema(many=True)
 
 # Initialize db
 with app.app_context():
-    db.drop_all()
+    # db.drop_all()
     db.create_all() 
 
 # Settings
@@ -62,6 +66,29 @@ supported_currency_codes = ["USD", "PHP", "EUR", "JPY", "GBP", "CAD", "AUD"]
 @app.route('/home')
 def home():
     return render_template('home.html')
+
+
+@app.route('/saving')
+def session_route():
+    saving = None
+
+    session['saving_id'] = 1
+    if 'saving_id' in session:
+        saving_data = db.session.get(Saving, session['saving_id'])
+        saving_data_history = saving_data.history.split(',') if saving_data.history else []
+        saving = {
+            'amount_goal': saving_data.amount_goal,
+            'amount_saved': saving_data.amount_saved,
+            'name': saving_data.name,
+            'is_goal_completed': saving_data.is_goal_completed,
+            'history': saving_data_history,
+            'id': saving_data.id,
+            'created_date': saving_data.created_date,
+            'goal_completed_date': saving_data.goal_completed_date,
+            'currency': saving_data.currency,
+        }
+
+    return jsonify({ 'saving': saving }), 200
 
 
 @app.route('/savings/api', methods=['GET', 'POST', 'PUT', 'DELETE'])
@@ -98,6 +125,9 @@ def savings_api():
         new_saving = Saving(name, amount_goal)
         db.session.add(new_saving)
         db.session.commit()
+
+        session["saving_id"] = new_saving.id;
+        session.permanent = True
 
         return saving_schema.jsonify(new_saving), 200
     elif request.method == 'PUT':

@@ -1,19 +1,13 @@
-const barAnimDuration = 500; // ms
 const modalAnimMS = 250;
 
-let addSavingBtnLock = false;
-let bar;
-
-/* TO DO: (THIS WEEK)
-- validation for new saving, submitting, & handling
-
+/* TO DO:
+- handle loading (none loaded, sessions, etc.)
 - add and subtract to saving btn inputs / modals?
 - validation, submitting, & handling + animations
 - + responsive design?
 
 - modal for mobile navbar
-- Getting from API & Submitting + Handling (details, progresbar, animations, etc.)
-- handle loading (none loaded, sessions, etc.)
+- Getting from API & Submitting + Handling (details, progressbar, animations, etc.)
 */
 
 /* (NEXT WEEK) 
@@ -87,21 +81,4 @@ $(function(){
     bar.set(amountSaved, true);
   });
   */
-  initializeMain();
 });
-
-function initializeMain() {
-  // initialize and clean everything
-  bar = new ldBar('#savingsProgress', {
-    'preset':  'circle',
-    'stroke': '#3B82F6',
-    'stroke-width': 5,
-    'duration': (barAnimDuration/1000),
-    'min': 0,
-    'value': 45,
-  });
-
-  addSavingBtnLock = false;
-
-  $('#savingAmountInput').val('');
-}

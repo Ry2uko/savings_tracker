@@ -38,7 +38,6 @@ body, html {
 
 #homeContainer #savingsProgress path.mainline {
     stroke-width: 5;
-    stroke: #2563EB;
 }
 
 #homeContainer #savingsProgress path.baseline {
