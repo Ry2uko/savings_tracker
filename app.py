@@ -101,7 +101,7 @@ def savings_api():
         if tz:
             parse_time_zone(tz, result)
 
-        return jsonify(result)
+        return jsonify({ 'savings': result }), 200
     elif request.method == 'POST':
         if 'name' not in request.json:
             return handle_err('No name.')
@@ -129,7 +129,9 @@ def savings_api():
         session["saving_id"] = new_saving.id;
         session.permanent = True
 
-        return saving_schema.jsonify(new_saving), 200
+        new_saving_data = saving_schema.dump(new_saving)
+
+        return jsonify({ 'saving': new_saving_data }), 200
     elif request.method == 'PUT':
         if 'id' not in request.json:
             return handle_err('No id.')
@@ -238,7 +240,9 @@ def savings_api():
 
         db.session.commit()
 
-        return saving_schema.jsonify(saving), 200
+        saving_data = saving_schema.dump(saving)
+
+        return jsonify({ 'saving': saving_data }), 200
     elif request.method == 'DELETE':
         if 'id' not in request.json:
             return handle_err('No id.')
@@ -255,7 +259,19 @@ def savings_api():
         db.session.delete(saving)
         db.session.commit()
 
-        return saving_schema.jsonify(saving), 200
+        saving_data = saving_schema.dump(saving)
+
+        return { 'saving': saving_data }, 200
+
+
+@app.route('/savings/api/<string:id>')
+def saving_api(id):
+    saving = db.session.get(Saving, id)
+    if saving == None:
+        return handle_err('Id not found.')
+    saving_data = saving_schema.dump(saving)
+
+    return jsonify({ 'saving': saving_data }), 200
 
 
 @app.route('/savings')
@@ -263,7 +279,7 @@ def savings():
     all_savings = Saving.query.all()
     result = savings_schema.dump(all_savings)
     savings = [saving['name'] for saving in result]
-    print(savings)
+
     return render_template('savings.html', savings=savings)
 
 

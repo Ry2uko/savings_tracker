@@ -19,8 +19,15 @@ $(function(){
     .then(response => response.json())
     .then(data => {
       let saving = data.saving;
-      initializeHome(saving);
+
+      if (saving == null) {
+        console.log($('.none-loaded'))
+        $('.none-loaded').removeClass('hidden');
+      } else {
+        initializeHome(saving);
+      }
     });
+
 });
 
 function initializeHome(saving) {
