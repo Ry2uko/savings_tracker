@@ -20,7 +20,7 @@ $(function(){
     .then(data => {
       let saving = data.saving;
 
-      if (saving == null) {
+      if (saving === null) {
         console.log($('.none-loaded'))
         $('.none-loaded').removeClass('hidden');
       } else {
@@ -28,6 +28,26 @@ $(function(){
       }
     });
 
+  $('#addToSaving').on('click', () => {
+    $('#modifyAmountModal .form-title').text('Add To Saving');
+    $('#submitModifyAmountForm')
+      .removeClass('bg-red-500')  
+      .addClass('bg-green-500');
+    $('#submitModifyAmountForm i').attr('class', 'fa-solid fa-plus');
+    toggleModal('modifyAmountModal');
+  });
+
+  const handleWithdrawFromSaving = () => {
+    $('#modifyAmountModal .form-title').text('Withdraw From Saving');
+    $('#submitModifyAmountForm')
+      .removeClass('bg-green-500')  
+      .addClass('bg-red-500');
+    $('#submitModifyAmountForm i').attr('class', 'fa-solid fa-minus');
+    toggleModal('modifyAmountModal');
+  }
+
+  $('#withdrawFromSavingA').on('click', handleWithdrawFromSaving);
+  $('#withdrawFromSavingB').on('click', handleWithdrawFromSaving);
 });
 
 function initializeHome(saving) {
@@ -46,30 +66,42 @@ function initializeHome(saving) {
   });
   addSavingBtnLock = false;
 
-  let savingAmountGoal = formatAmount(saving['amount_goal'], saving['currency']);
-  let savingAmountSaved = formatAmount(saving['amount_saved'], saving['currency']);
+  let savingCurrency = validateCurrency(saving['currency']);
+  if (savingCurrency === null) {
+    savingCurrency = "$";
+    console.error('Invalid currency');
+  }
+
+  let savingAmountGoal = formatAmount(saving['amount_goal'], savingCurrency);
+  let savingAmountSaved = formatAmount(saving['amount_saved'], savingCurrency);
   let savingName = saving['name'];
 
   let amountRemaining = saving['amount_goal'] - saving['amount_saved'];
-  let savingAmountRemaining = formatAmount((amountRemaining >= 0 ? amountRemaining : 0), saving['currency'])
+  let savingAmountRemaining = formatAmount((amountRemaining >= 0 ? amountRemaining : 0), savingCurrency)
 
   $('#savingAmountGoal').text(savingAmountGoal);
   $('#savingAmountSaved').text(savingAmountSaved);
   $('#savingName').text(savingName);
   $('#savingAmountRemaining').text(savingAmountRemaining)
 
+  $('#formCurrencyLabel').val(savingCurrency)
   $('.saving-container').removeClass('hidden').addClass('flex');
 }
 
-function formatAmount(amount, currency) {
+function validateCurrency(currency) {
   const supportedCurrencies = Object.keys(currencies);
   currency = currency.toUpperCase();
+  if (supportedCurrencies.includes(currency)) {
+    return currencies[currency];
+  }
 
-  if (isNaN(amount)) return "_Invalid amount"
-  else if (!supportedCurrencies.includes(currency)) return "_Invalid currency"
+  return null;
+}
 
-  const currencySymbol = currencies[currency];
+function formatAmount(amount, currency) {
+  if (isNaN(amount)) return null;
+
   const formattedAmount = amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 
-  return `${currencySymbol}${formattedAmount}`;
+  return `${currency}${formattedAmount}`;
 }

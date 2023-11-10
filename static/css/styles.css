@@ -26,9 +26,17 @@ body, html {
     background: #fff;
     transform: translate(-50%, -50%);
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 0.4rem;
+}
+
+.modal.modal-sm {
+    width: 85%;
+    height: 220px;
+}
+
+.modal.modal-lg {
     width: 90%;
     height: 600px;
-    border-radius: 0.4rem;
 }
 
 #homeContainer #savingsProgress {

@@ -72,7 +72,6 @@ def home():
 def session_route():
     saving = None
 
-    session['saving_id'] = 1
     if 'saving_id' in session:
         saving_data = db.session.get(Saving, session['saving_id'])
         saving_data_history = saving_data.history.split(',') if saving_data.history else []
@@ -170,6 +169,7 @@ def savings_api():
 
             # If user reached the amount goal
             if saving.amount_saved >= saving.amount_goal:
+                saving.amount_saved = saving.amount_goal
                 saving.is_goal_completed = True
                 saving.goal_completed_date = datetime.now()
 
@@ -236,7 +236,7 @@ def savings_api():
             elif currency.upper() not in supported_currency_codes:
                 return handle_err(f"Currency not supported. Supported currencies: {', '.join(supported_currency_codes)}")
             
-            saving.currency = currency
+            saving.currency = currency.upper()
 
         db.session.commit()
 

@@ -1,17 +1,24 @@
 const modalAnimMS = 250;
 
 /* TO DO:
-- handle loading (none loaded)
-- add and subtract to saving btn inputs / modals?
-- validation, submitting, & handling + animations
-- handling goal completed (disable and change color for add)
-- handle no amount (disabled and change color for minus)
-- + responsive design?
+- (11/11/23): /home
+  - TODO: responsive design for modal (different button placement)
+  - TODO: input validation
+  - TODO: input submitting & handling
+    - TODO: progress animation handle
+  - TODO: handling goal completed (disable and change color for add))
+  - TODO: handle no amount (disabled and change color for minus)
+  - TODO: amount_saved in PUT request
 
-- modal for mobile navbar
-- edit saving 
-- /savings session load + after post
-- Getting from API & Submitting + Handling (details, progressbar, animations, etc.)
+- (12/11/23) /savings - edit saving
+  - TODO: rename subtract to withdraw from api :) (for consistency)
+  - TODO: loading a saving (+ handling sessions from server & client)
+  - TODO: ...
+
+- (( Potential Bugs))
+  - In the details in /home, when the name is too long
+  - In the /savings, also when the name is too long
+  - Maybe add a limit for the name of a saving?
 */
 
 /* (NEXT) 
@@ -19,6 +26,11 @@ const modalAnimMS = 250;
 - settings
 - bug checking & testing
 - video making
+
+For the history:
++ added amount
+- withdrawed amount
+~ editted amount (for put request to amount_saved)
 */
 
 // Get saving in session
@@ -26,7 +38,7 @@ const sessionRequest = new Promise((resolve, reject) => {
   fetch('/saving')
     .then(response => response.json())
     .then(sessionData => {
-      if (sessionData.saving == null) {
+      if (sessionData.saving === null) {
         reject(null);
       } else {
         resolve(sessionData.saving);
@@ -63,10 +75,10 @@ $(function(){
   */
 });
 
-function toggleModal(modalId, ms=modalAnimMS) {
+function toggleModal(modalId, ms=modalAnimMS, cb) {
   const modal = $(`#${modalId}`);
 
-  if (modal.css('display') == 'none') {
+  if (modal.css('display') === 'none') {
     $('.parent-container').css({
       'pointerEvents': 'none',
       'userSelect': 'none',
@@ -79,6 +91,8 @@ function toggleModal(modalId, ms=modalAnimMS) {
     }).animate({
       'opacity': 1,
     }, ms);
+
+    modal.find('.close-modal-btn').on('click', () => { toggleModal(modalId, ms, cb) });
   } else {
     $('.parent-container').animate({
       'opacity': 1,
@@ -96,6 +110,9 @@ function toggleModal(modalId, ms=modalAnimMS) {
       $(this).css({
         'display': 'none',
       });
+
+      modal.find('.close-modal-btn').off('click');
+      if (cb) cb();
     });
   }
 }

@@ -1,6 +1,5 @@
 $(function(){
   $('#newSaving').on('click', () => toggleModal('addSavingModal'));
-  $('#closeAddSavingModal').on('click', () => toggleModal('addSavingModal'));
 
   $('#submitAddSavingForm').on('click', () => {
     const handleFormErr = errMsg => {
