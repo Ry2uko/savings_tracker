@@ -1,19 +1,12 @@
 const modalAnimMS = 250;
 
 /* TO DO:
-- (11/11/23): /home
-  - TODO: responsive design for modal (different button placement)
-  - TODO: input validation
-  - TODO: input submitting & handling
-    - TODO: progress animation handle
+- (12/11/23) /savings - edit saving
   - TODO: handling goal completed (disable and change color for add))
   - TODO: handle no amount (disabled and change color for minus)
   - TODO: amount_saved in PUT request
-
-- (12/11/23) /savings - edit saving
   - TODO: rename subtract to withdraw from api :) (for consistency)
   - TODO: loading a saving (+ handling sessions from server & client)
-  - TODO: ...
 
 - (( Potential Bugs))
   - In the details in /home, when the name is too long
@@ -51,28 +44,6 @@ $(function(){
 
   // clean inputs
   $('input[type="text"]').val('');
-
-  /*
-  $('#addSavingBtn').on('click', () => {
-    // disable btn click while animation is not finished
-    if (addSavingBtnLock) return;
-    addSavingBtnLock = true;
-    setTimeout(() => {
-      addSavingBtnLock = false;
-    }, barAnimDuration);
-
-    // clean user input
-    let inputValue = $('#savingAmountInput').val();
-    inputValue = inputValue.replace(/[^0-9\.-]/g, '');
-
-    inputValue = parseFloat(inputValue);
-
-    if (!inputValue || inputValue <= 0 || amountSaved >= maxAmount) return;
-    amountSaved = Math.round((inputValue + amountSaved)*100)/100;
-    console.log(amountSaved, inputValue, amountSaved);
-    bar.set(amountSaved, true);
-  });
-  */
 });
 
 function toggleModal(modalId, ms=modalAnimMS, cb) {

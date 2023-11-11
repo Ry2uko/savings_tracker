@@ -5,30 +5,38 @@
 {% endblock %}
 
 {% block modal %}
-    <div id="modifyAmountModal" class="modal modal-sm flex-col hidden opacity-0">
+    <div id="modifyAmountModal" class="modal modal-sm flex-col hidden opacity-0 relative">
         <button type="button" class="close-modal-btn absolute top-0 right-0 my-1 mx-3
         text-[1.7rem] cursor-pointer p-1">
             <i class="fa-solid fa-xmark text-slate-800"></i>
         </button>
 
-        <div class="form-header-container pt-6 pb-4 border-b-slate-200 ">
-            <h4 class="form-title text-[2.3rem] font-yanone-kaffeesatz 
+        <div class="form-header-container pt-8 pb-4 border-b-slate-200 md:pt-6">
+            <h4 class="form-title text-[2.6rem] font-yanone-kaffeesatz 
             text-center md:text-[2.2rem]"></h4>
         </div>
 
-        <div class="form-container flex justify-center pt-2">
-            <div class="input-group flex w-4/6">
+        <span class="hidden text-center text-xl font-noto-sans mb-2
+        text-red-600 error-text" id="addSavingErrorText">I am another hidden placeholder :)</span>
+
+        <div class="form-container flex justify-center py-6 md:py-4">
+            <div class="input-group flex w-5/6">
                 <input type="text" id="formCurrencyLabel" class="bg-slate-100 border-l
-                border-t border-b border-slate-300 rounded-l-md py-4 text-center w-[12%] text-[1.6rem]
-                text-slate-500" disabled>
-                <input type="text" id="savingNameInput" class="bg-white
-                border font-noto-sans border-slate-300 py-4 px-4 w-[73%] text-[1.6rem] 
-                focus:outline-none"/>    
-                <button id="submitModifyAmountForm" class=" rounded-r-md
-                font-noto-sans py-2 w-[15%] text-[1.6rem]">
+                border-t border-b border-slate-300 rounded-l-md py-4 text-center w-[15%] text-[2rem]
+                text-slate-500 md:w-[12%] md:text-[1.6rem]" disabled>
+                <input type="text" id="savingAmountInput" class="bg-white
+                border rounded-r-md font-noto-sans border-slate-300 py-4 px-4 w-[85%] text-[1.6rem] 
+                focus:outline-none md:w-[73%] md:rounded-none"/>    
+                <button class="submitModifyAmountForm icon rounded-r-md
+                font-noto-sans py-2 w-[15%] text-[1.6rem] hidden md:block">
                     <i class=""></i>
                 </button>
             </div>
+
+            <button class="submitModifyAmountForm text absolute bottom-0  block md:hidden
+            font-noto-sans py-3 px-6 text-[1.3rem] mx-auto my-8 rounded-md">
+                Add to Saving
+            </button>
         </div>
     </div>
 {% endblock %}
@@ -43,15 +51,15 @@
             id="addToSaving">
                 <i class="fa-solid fa-plus"></i>
             </button>
-            <button type="button" class="absolute hidden top-0 left-0 bg-red-500
+            <button type="button" class="withdrawFromSaving absolute hidden top-0 left-0 bg-red-500
             pr-8 pl-4 pb-8 pt-4 z-[99] cursor-pointer rounded-br-full transition ease-out duration-50 
             text-2xl hover:scale-[1.10] hover:translate-x-[2px] hover:translate-y-[2px]
-            md:block" id="withdrawFromSavingA">
+            md:block">
                 <i class="fa-solid fa-minus"></i>
             </button>
-            <button type="button" class="absolute right-0 top-[80px] bg-red-500
+            <button type="button" class="withdrawFromSaving absolute right-0 top-[80px] bg-red-500
             pl-6 pr-2 py-4 rounded-l-full z-[99] cursor-pointer transition ease-out duration-50 
-            text-2xl hover:scale-[1.10] hover:translate-x-[-2px] md:hidden" id="withdrawFromSavingB">
+            text-2xl hover:scale-[1.10] hover:translate-x-[-2px] md:hidden">
                 <i class="fa-solid fa-minus"></i>
             </button>
 

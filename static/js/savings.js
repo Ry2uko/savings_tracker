@@ -34,18 +34,15 @@ $(function(){
     };
 
     fetch('/savings/api', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
+      'method': 'POST',
+      'headers': {
+        'Content-Type': 'application/json',
       }, 
-      body: JSON.stringify(reqBody)
+      'body': JSON.stringify(reqBody),
     })
     .then(response => response.json())
     .then(data => {
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
+      if (data.error) throw new Error(data.error);
       location.reload();
     })
     .catch(err => {

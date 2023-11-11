@@ -72,6 +72,7 @@ def home():
 def session_route():
     saving = None
 
+    session['saving_id'] = 1
     if 'saving_id' in session:
         saving_data = db.session.get(Saving, session['saving_id'])
         saving_data_history = saving_data.history.split(',') if saving_data.history else []
@@ -141,8 +142,8 @@ def savings_api():
             return handle_err('Id not found.', 404)
 
         # Validate updates
-        if 'added_amount' in request.json and 'subtracted_amount' in request.json:
-            return handle_err('added_amount and subtracted_amount cannot be used together.')
+        if 'added_amount' in request.json and 'withdrawed_amount' in request.json:
+            return handle_err('added_amount and withdrawed_amount cannot be used together.')
     
         if 'added_amount' in request.json:
             # If goal has already been completed
@@ -173,34 +174,34 @@ def savings_api():
                 saving.is_goal_completed = True
                 saving.goal_completed_date = datetime.now()
 
-        if 'subtracted_amount' in request.json:
+        if 'withdrawed_amount' in request.json:
             # If goal has already been completed
             if saving.amount_saved <= 0:
-                return handle_err('Nothing to subtract.')
+                return handle_err('Nothing to withdraw.')
 
-            subtracted_amount = request.json['subtracted_amount']
+            withdrawed_amount = request.json['withdrawed_amount']
 
             try:
-                subtracted_amount = float(subtracted_amount)
-                if subtracted_amount <= 0:
+                withdrawed_amount = float(withdrawed_amount)
+                if withdrawed_amount <= 0:
                     raise ValueError
             except ValueError:
-                return handle_err('Invalid subtracted amount.')
+                return handle_err('Invalid withdrawed amount.')
 
-            if subtracted_amount > saving.amount_saved:
+            if withdrawed_amount > saving.amount_saved:
                 return handle_err('Not enough saving amount.')
 
-            if saving.is_goal_completed and (saving.amount_saved-subtracted_amount) < saving.amount_goal:
+            if saving.is_goal_completed and (saving.amount_saved-withdrawed_amount) < saving.amount_goal:
                 saving.is_goal_completed = False
                 saving.goal_completed_date = None
 
             # Add to history
-            history_entry = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}:-{subtracted_amount}'
+            history_entry = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}:-{withdrawed_amount}'
             history_list = saving.history.split(',') if saving.history else []
             history_list.append(history_entry)
             saving.history = ','.join(history_list)
 
-            saving.amount_saved -= subtracted_amount
+            saving.amount_saved -= withdrawed_amount
             saving.amount_saved = round(saving.amount_saved, 2)
 
         if 'name' in request.json:
