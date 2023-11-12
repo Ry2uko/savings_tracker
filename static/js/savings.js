@@ -1,4 +1,5 @@
 $(function(){
+  // Event listeners
   $('#newSaving').on('click', () => toggleModal('addSavingModal'));
 
   $('#submitAddSavingForm').on('click', () => {
@@ -10,7 +11,6 @@ $(function(){
     let savingName = $('#savingNameInput').val();
     let savingAmountGoal = $('#savingAmountGoalInput').val();
 
-    // Validate form
     if (!savingName) {
       return handleFormErr('Name must not be empty.');
     }
@@ -20,7 +20,6 @@ $(function(){
 
     savingAmountGoal = savingAmountGoal.replace(/[^0-9.]/g, '');
     savingAmountGoal = parseFloat(savingAmountGoal);
-
     if (isNaN(savingAmountGoal)) {
       return handleFormErr('Amount goal must be a number.')
     } else if (savingAmountGoal <= 0) {

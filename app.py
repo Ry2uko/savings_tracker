@@ -6,13 +6,10 @@ from dateutil.parser import parse
 import os
 import pytz
 
-# Initialize app
+# Initialize app & database
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-app.secret_key = ""
-
-# Setup Database
 db_name = 'savings.sqlite'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, db_name)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -49,27 +46,30 @@ class SavingSchema(ma.Schema):
         'goal_completed_date', 'is_goal_completed', 'history', 'currency')
 
 
-# Initialize Saving Schema
+# Initialization
 saving_schema = SavingSchema()
 savings_schema = SavingSchema(many=True)
 
-
-# Initialize db
 with app.app_context():
     # db.drop_all()
     db.create_all() 
 
-# Settings
+# Settings / Config
 supported_currency_codes = ["USD", "PHP", "EUR", "JPY", "GBP", "CAD", "AUD"]
 
 
+# Routes
 @app.route('/home')
 def home():
+    """Render home page"""
+
     return render_template('home.html')
 
 
 @app.route('/saving')
 def session_route():
+    """Return saving data in session"""
+
     saving = None
 
     session['saving_id'] = 1
@@ -91,17 +91,45 @@ def session_route():
     return jsonify({ 'saving': saving }), 200
 
 
+@app.route('/savings')
+def savings():
+    """Render savings page and savings (name only)"""
+
+    all_savings = Saving.query.all()
+    result = savings_schema.dump(all_savings)
+    savings = [saving['name'] for saving in result]
+
+    return render_template('savings.html', savings=savings)
+
+
+@app.route('/stats')
+def stats():
+    """Render stats page"""
+    return render_template('stats.html')
+
+
+@app.route('/settings')
+def settings():
+    """Render setting page"""
+    return render_template('settings.html')
+
+
+# API
 @app.route('/savings/api', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def savings_api():
+    """CRUD API for savings"""
+
     if request.method == 'GET':
         all_savings = Saving.query.all()
         result = savings_schema.dump(all_savings)
 
+        # parse all date to timezone if user provided one (e.g. '?tz=Asia/Manila')
         tz = request.args.get('tz')
         if tz:
             parse_time_zone(tz, result)
 
         return jsonify({ 'savings': result }), 200
+
     elif request.method == 'POST':
         if 'name' not in request.json:
             return handle_err('No name.')
@@ -120,18 +148,21 @@ def savings_api():
         except ValueError:
             return handle_err('Invalid amount goal.')
         
-        amount_goal = round(amount_goal, 2)
+        if len(name) > 100:
+            return handle_err('Name must be less than 100 characters.')
 
+        amount_goal = round(amount_goal, 2)
         new_saving = Saving(name, amount_goal)
         db.session.add(new_saving)
         db.session.commit()
 
+        # save to session
         session["saving_id"] = new_saving.id;
         session.permanent = True
 
         new_saving_data = saving_schema.dump(new_saving)
-
         return jsonify({ 'saving': new_saving_data }), 200
+
     elif request.method == 'PUT':
         if 'id' not in request.json:
             return handle_err('No id.')
@@ -141,17 +172,16 @@ def savings_api():
         if saving == None:
             return handle_err('Id not found.', 404)
 
-        # Validate updates
-        if 'added_amount' in request.json and 'withdrawed_amount' in request.json:
-            return handle_err('added_amount and withdrawed_amount cannot be used together.')
-    
+        # Handle each field if provided
         if 'added_amount' in request.json:
-            # If goal has already been completed
+            if 'withdrawed_amount' in request.json or 'amount_saved' in request.json:
+                return handle_err('added_amount, withdrawed_amount, or amount_saved cannot be used together.')
+
+            # handle if goal is already completed
             if saving.is_goal_completed:
                 return handle_err('Amount goal has already been reached.')
 
             added_amount = request.json['added_amount']
-
             try:
                 added_amount = float(added_amount)
                 if added_amount <= 0:
@@ -170,12 +200,14 @@ def savings_api():
                 saving.goal_completed_date = datetime.now()
 
         if 'withdrawed_amount' in request.json:
-            # If goal has already been completed
+            if 'added_amount' in request.json or 'amount_saved' in request.json:
+                return handle_err('added_amount, withdrawed_amount, or amount_saved cannot be used together.')
+
+            # handle if no amount_saved yet
             if saving.amount_saved <= 0:
                 return handle_err('Nothing to withdraw.')
 
             withdrawed_amount = request.json['withdrawed_amount']
-
             try:
                 withdrawed_amount = float(withdrawed_amount)
                 if withdrawed_amount <= 0:
@@ -199,8 +231,10 @@ def savings_api():
                 saving.goal_completed_date = None
 
         if 'amount_saved' in request.json:
+            if 'withdrawed_amount' in request.json or 'added_amount' in request.json:
+                return handle_err('added_amount, withdrawed_amount, or amount_saved cannot be used together.')
+
             amount_saved = request.json['amount_saved']
-            
             try: 
                 amount_saved = float(amount_saved)
                 if amount_saved < 0:
@@ -214,9 +248,12 @@ def savings_api():
             saving.history = append_to_history(saving.history, amount_saved, 'edit')
             saving.amount_saved = amount_saved
 
+            # handle if goal is already completed
             if saving.is_goal_completed and amount_saved < saving.amount_goal:
                 saving.is_goal_completed = False
                 saving.goal_completed_date = None
+            
+            # handle if amount_saved is set 'equal' to amount_goal
             elif amount_saved >= saving.amount_goal:
                 saving.is_goal_completed = True
                 saving.goal_completed_date = datetime.now()
@@ -227,7 +264,9 @@ def savings_api():
             name = request.json['name']
             if not name:
                 return handle_err('Invalid name.')
-
+            elif len(name) > 100:
+                return handle_err('Name must be less than 100 characters.')
+            
             saving.name = name
 
         if 'amount_goal' in request.json:
@@ -242,7 +281,7 @@ def savings_api():
             except ValueError:
                 return handle_err('Invalid amount goal.')
             
-            # If goal has already been reached
+            # handle when goal is already completed
             if saving.is_goal_completed:
                 saving.is_goal_completed = False
                 saving.goal_completed_date = None
@@ -261,12 +300,12 @@ def savings_api():
         db.session.commit()
 
         saving_data = saving_schema.dump(saving)
-
-        return jsonify({ 'saving': saving_data }), 200
+        return jsonify({ 'saving': saving_data }), 200 
+    
     elif request.method == 'DELETE':
         if 'id' not in request.json:
             return handle_err('No id.')
-        
+
         id = request.json['id']
 
         if not id:
@@ -280,12 +319,13 @@ def savings_api():
         db.session.commit()
 
         saving_data = saving_schema.dump(saving)
-
         return { 'saving': saving_data }, 200
 
 
 @app.route('/savings/api/<string:id>')
 def saving_api(id):
+    """Return saving data with given id"""
+
     saving = db.session.get(Saving, id)
     if saving == None:
         return handle_err('Id not found.')
@@ -294,42 +334,27 @@ def saving_api(id):
     return jsonify({ 'saving': saving_data }), 200
 
 
-@app.route('/savings')
-def savings():
-    all_savings = Saving.query.all()
-    result = savings_schema.dump(all_savings)
-    savings = [saving['name'] for saving in result]
-
-    return render_template('savings.html', savings=savings)
-
-
-@app.route('/stats')
-def stats():
-    return render_template('stats.html')
-
-
-@app.route('/settings')
-def settings():
-    return render_template('settings.html')
-
-
+# Not found
 @app.errorhandler(404)
 def page_not_found(e):
     return redirect('/home')
 
 
+# Helper Functions
 def handle_err(msg, status=400):
+    """Return error object"""
     return (jsonify({'error': msg}), status)
 
 
 def parse_time_zone(tz, savings):
+    """Convert dates of every saving to given timezone"""
+
     try:
         user_timezone = pytz.timezone(tz) 
     except pytz.UnknownTimeZoneError:
         return
 
     for saving in savings:
-        # Convert dates to user timezone
         created_date = datetime.fromisoformat(saving['created_date'])
         created_date = created_date.astimezone(user_timezone)
         print(created_date)
@@ -342,6 +367,8 @@ def parse_time_zone(tz, savings):
 
 
 def append_to_history(history, amount, append_type='edit'):
+    """Append amount operation to saving history (add/withdraw/edit)"""
+
     append_types = {
         'add': '+',
         'withdraw': '-',

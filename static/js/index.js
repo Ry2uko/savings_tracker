@@ -1,17 +1,6 @@
-const modalAnimMS = 250;
-
 /* TO DO:
 - (12/11/23) /savings - edit saving
-  - TODO: amount_saved in PUT request
-  - TODO: rename subtract to withdraw from api :) (for consistency)
   - TODO: loading a saving (+ handling sessions from server & client)
-
-- TODO: adding comments (// & \/\*\*\/)
-
-- (( Potential Bugs))
-  - In the details in /home, when the name is too long
-  - In the /savings, also when the name is too long
-  - Maybe add a limit for the name of a saving?
 */
 
 /* (NEXT) 
@@ -19,14 +8,11 @@ const modalAnimMS = 250;
 - settings
 - bug checking & testing
 - video making
-
-For the history:
-+ added amount
-- withdrawed amount
-~ editted amount (for put request to amount_saved)
 */
 
-// Get saving in session
+const modalAnimMS = 250;
+
+// get saving in session
 const sessionRequest = new Promise((resolve, reject) => {
   fetch('/saving')
     .then(response => response.json())
@@ -37,6 +23,9 @@ const sessionRequest = new Promise((resolve, reject) => {
         resolve(sessionData.saving);
       }
     });
+  
+  // use sessionRequest.then(session => ...) for easy access of session
+  // use catch if session is null
 });
 
 $(function(){
@@ -47,6 +36,8 @@ $(function(){
 });
 
 function toggleModal(modalId, ms=modalAnimMS, cb) {
+  /* toggle modal with given modalId */
+
   const modal = $(`#${modalId}`);
 
   if (modal.css('display') === 'none') {
