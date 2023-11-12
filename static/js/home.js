@@ -1,4 +1,4 @@
-const currencies = {
+const CURRENCIES = {
   "USD": "$",
   "CAD": "$",
   "AUD": "$",
@@ -8,8 +8,17 @@ const currencies = {
   "GBP": "£",
 };
 
+const COLORS = {
+  'blue': '#2563eb',
+  'yellow': '#f6bb09',
+  'green': '#22C55E',
+  'red': '#ef4444',
+  'gray': '#333'
+};
+
 const barAnimDurationMs = 350; 
 
+let saving;
 let bar;
 let addSavingBtnLock = false;
 
@@ -18,7 +27,7 @@ $(function(){
   fetch('/saving')  
     .then(response => response.json())
     .then(data => {
-      let saving = data.saving;
+      saving = data.saving;
 
       if (saving === null) {
         console.log($('.none-loaded'))
@@ -29,11 +38,11 @@ $(function(){
     });
 
   $('#addToSaving').on('click', () => {
+    if (!saving || saving['is_goal_completed']) return;
+
     $('#modifyAmountModal').attr('data-transaction', 'add');
     $('#modifyAmountModal .form-title').text('Add To Saving');
-    $('.submitModifyAmountForm')
-      .removeClass('bg-red-500')  
-      .addClass('bg-green-500');
+    $('.submitModifyAmountForm').css('backgroundColor', COLORS['green']);
     $('.submitModifyAmountForm.icon i').attr('class', 'fa-solid fa-plus');
     $('.submitModifyAmountForm.text').text('Add to Saving');
     toggleModal('modifyAmountModal', undefined, () => {
@@ -42,11 +51,10 @@ $(function(){
   });
 
   $('.withdrawFromSaving').on('click', () => {
+    if (!saving || saving['amount_saved'] <= 0) return;
     $('#modifyAmountModal').attr('data-transaction', 'withdraw');
     $('#modifyAmountModal .form-title').text('Withdraw From Saving');
-    $('.submitModifyAmountForm')
-      .removeClass('bg-green-500')  
-      .addClass('bg-red-500');
+    $('.submitModifyAmountForm').css('backgroundColor', COLORS['red']);
     $('.submitModifyAmountForm.icon i').attr('class', 'fa-solid fa-minus');
     $('.submitModifyAmountForm.text').text('Withdraw from Saving');
     toggleModal('modifyAmountModal', undefined, () => {
@@ -99,7 +107,7 @@ $(function(){
       .then(data => {
         if (data.error) throw new Error(data.error);
 
-        const saving = data.saving;
+        saving = data.saving;
         $('#savingAmountInput').val('');
         toggleModal('modifyAmountModal');
         displayDetails(saving);
@@ -130,19 +138,17 @@ function initializeHome(saving) {
     progressPercentage = 1;
   }
   
-  let barStroke = saving['is_goal_completed'] ? '#f4d50b' : '#3B82F6';
   // Load progress bar
   bar = new ldBar('#savingsProgress', {
     'preset':  'circle',
-    'stroke': barStroke,
     'stroke-width': 5,
     'duration': (barAnimDurationMs/1000),
     'min': 0,
     'max': 100,
     'value': progressPercentage,
   });
-  
-  displayDetails(saving);
+
+  displayDetails(saving, );
 }
 
 function displayDetails(saving) {
@@ -159,20 +165,54 @@ function displayDetails(saving) {
   let amountRemaining = saving['amount_goal'] - saving['amount_saved'];
   let savingAmountRemaining = formatAmount((amountRemaining >= 0 ? amountRemaining : 0), savingCurrency)
 
+  // details
   $('#savingAmountGoal').text(savingAmountGoal);
   $('#savingAmountSaved').text(savingAmountSaved);
   $('#savingName').text(savingName);
   $('#savingAmountRemaining').text(savingAmountRemaining)
 
+  // modal
   $('#formCurrencyLabel').val(savingCurrency)
   $('.saving-container').removeClass('hidden').addClass('flex');
+
+  // default
+  $('#savingsProgress .mainline').attr('stroke', COLORS['blue']);
+  $('.saving-details-container .detail-highlight').css('color', COLORS['blue']);
+  $('#addToSaving').css({
+    'backgroundColor': COLORS['green'],
+    'opacity': 1,
+    'pointerEvents': 'auto',
+  });
+  $('.withdrawFromSaving').css({
+    'backgroundColor': COLORS['red'],
+    'opacity': 1,
+    'pointerEvents': 'auto',
+  });
+
+  if (saving['is_goal_completed']) {
+    $('#savingsProgress .mainline').attr('stroke', COLORS['yellow']);
+    $('.saving-details-container .detail-highlight').css('color', COLORS['yellow']);
+    $('#addToSaving').css({
+      'backgroundColor': COLORS['gray'],
+      'opacity': 0.85,
+      'pointerEvents': 'none',
+    });
+  } else if (saving['amount_saved'] <= 0) {
+    $('.saving-details-container .detail-highlight').css('color', '#000');
+    $('.withdrawFromSaving').css({
+      'backgroundColor': COLORS['gray'],
+      'opacity': 0.85,
+      'pointerEvents': 'none',
+    });
+  }
+  
 }
 
 function validateCurrency(currency) {
-  const supportedCurrencies = Object.keys(currencies);
+  const supportedCurrencies = Object.keys(CURRENCIES);
   currency = currency.toUpperCase();
   if (supportedCurrencies.includes(currency)) {
-    return currencies[currency];
+    return CURRENCIES[currency];
   }
 
   return null;

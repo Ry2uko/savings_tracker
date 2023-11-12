@@ -2,8 +2,6 @@ const modalAnimMS = 250;
 
 /* TO DO:
 - (12/11/23) /savings - edit saving
-  - TODO: handling goal completed (disable and change color for add))
-  - TODO: handle no amount (disabled and change color for minus)
   - TODO: amount_saved in PUT request
   - TODO: rename subtract to withdraw from api :) (for consistency)
   - TODO: loading a saving (+ handling sessions from server & client)

@@ -45,6 +45,7 @@ body, html {
 }
 
 #homeContainer #savingsProgress path.mainline {
+    transition: background-color 150ms;
     stroke-width: 5;
 }
 
