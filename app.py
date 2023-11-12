@@ -159,14 +159,9 @@ def savings_api():
             except ValueError:
                 return handle_err('Invalid added amount.')
 
-            # Add to history
-            history_entry = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}:+{added_amount}'
-            history_list = saving.history.split(',') if saving.history else []
-            history_list.append(history_entry)
-            saving.history = ','.join(history_list)
-
+            added_amount = round(added_amount, 2)
+            saving.history = append_to_history(saving.history, added_amount, 'add')
             saving.amount_saved += added_amount
-            saving.amount_saved = round(saving.amount_saved, 2)
 
             # If user reached the amount goal
             if saving.amount_saved >= saving.amount_goal:
@@ -191,18 +186,42 @@ def savings_api():
             if withdrawed_amount > saving.amount_saved:
                 return handle_err('Not enough saving amount.')
 
+            withdrawed_amount = round(withdrawed_amount, 2)
+            saving.history = append_to_history(saving.history, withdrawed_amount, 'withdraw')
+            saving.amount_saved -= withdrawed_amount
+
             if saving.is_goal_completed and (saving.amount_saved-withdrawed_amount) < saving.amount_goal:
+                """  the other condition is not actually necessary, since if 
+                the amount_saved becomes greater than amount goal, the amount_saved would 
+                just be equal to the amount_goal """
+            
                 saving.is_goal_completed = False
                 saving.goal_completed_date = None
 
-            # Add to history
-            history_entry = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}:-{withdrawed_amount}'
-            history_list = saving.history.split(',') if saving.history else []
-            history_list.append(history_entry)
-            saving.history = ','.join(history_list)
+        if 'amount_saved' in request.json:
+            amount_saved = request.json['amount_saved']
+            
+            try: 
+                amount_saved = float(amount_saved)
+                if amount_saved < 0:
+                    raise ValueError
+                elif amount_saved > saving.amount_goal:
+                    return handle_err('Amount saved must not be greater than amount goal.')
+            except ValueError:
+                return handle_err('Invalid amount saved.')
 
-            saving.amount_saved -= withdrawed_amount
-            saving.amount_saved = round(saving.amount_saved, 2)
+            amount_saved = round(amount_saved, 2)
+            saving.history = append_to_history(saving.history, amount_saved, 'edit')
+            saving.amount_saved = amount_saved
+
+            if saving.is_goal_completed and amount_saved < saving.amount_goal:
+                saving.is_goal_completed = False
+                saving.goal_completed_date = None
+            elif amount_saved >= saving.amount_goal:
+                saving.is_goal_completed = True
+                saving.goal_completed_date = datetime.now()
+
+            saving.amount_saved = amount_saved
 
         if 'name' in request.json:
             name = request.json['name']
@@ -219,7 +238,7 @@ def savings_api():
                 if amount_goal <= 0:
                     raise ValueError
                 elif amount_goal <= saving.amount_saved:
-                    return handle_err('Amount goal should be higher than amount saved.')
+                    return handle_err('Amount goal must be higher than amount saved.')
             except ValueError:
                 return handle_err('Invalid amount goal.')
             
@@ -320,6 +339,24 @@ def parse_time_zone(tz, savings):
             goal_completed_date = datetime.fromisoformat(saving['goal_completed_date'])
             goal_completed_date = goal_completed_date.astimezone(user_timezone)
             saving['goal_completed_date'] = goal_completed_date.strftime("%Y-%m-%d %H:%M:%S%z")
+
+
+def append_to_history(history, amount, append_type='edit'):
+    append_types = {
+        'add': '+',
+        'withdraw': '-',
+        'edit': '~'
+    }
+
+    symbol = append_types[append_type.lower()]
+
+    # Add to history
+    history_entry = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}:{symbol}{amount}'
+    history_list = history.split(',') if history else []
+    history_list.append(history_entry)
+    history = ','.join(history_list)
+
+    return history
 
 
 if __name__ == '__main__':

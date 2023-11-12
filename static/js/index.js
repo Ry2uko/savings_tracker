@@ -6,6 +6,8 @@ const modalAnimMS = 250;
   - TODO: rename subtract to withdraw from api :) (for consistency)
   - TODO: loading a saving (+ handling sessions from server & client)
 
+- TODO: adding comments (// & \/\*\*\/)
+
 - (( Potential Bugs))
   - In the details in /home, when the name is too long
   - In the /savings, also when the name is too long
