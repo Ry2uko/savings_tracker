@@ -54,22 +54,20 @@
                 <i class="fa-solid fa-plus"></i>
             </button>
         </div>
-
+        
         {% if savings %}
             <div class="savings-container grid grid-cols-1 justify-between mx-7 text-center
             gap-y-6 mt-2 py-5 md:grid-cols-2 md:mt-0 md:gap-y-4 md:gap-x-5">
-
-                {% for saving_name in savings %}
-                    <div class="bg-white border border-gray-200 text-black drop-shadow-sm 
+                {% for saving in savings %}
+                    <div class="saving-item bg-white border border-gray-200 text-black drop-shadow-sm 
                     cursor-pointer px-5 py-6 rounded-md transition duration-150
-                    saving-item hover:border-gray-400 text-[1.4rem]">
-                        {{ saving_name }}
+                    select-none hover:border-gray-400 text-[1.4rem]" data-saving-id="{{ saving[1] }}">
+                        {{ saving[0] }}
                     </div>
                 {% endfor %}
-                
             </div>
-        {% else %}
-            <span class="empty-message font-lato text-slate-500 text-2xl text-center mt-[2rem]">Ready to save?</span>
+        {% else%}
+        <span class="empty-message font-lato text-slate-500 text-2xl text-center mt-[2rem]">Ready to save?</span>
         {% endif %}
     </div>
 {% endblock %}

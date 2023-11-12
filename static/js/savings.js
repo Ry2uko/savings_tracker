@@ -1,6 +1,18 @@
+let savingData;
+
 $(function(){
+  sessionRequest.then(sessionData => {
+    savingData = sessionData;
+    $(`.saving-item[data-saving-id='${savingData.id}']`).addClass('active');
+  }).catch(() => {
+    console.log('no session loaded :D');
+  });
+
   // Event listeners
-  $('#newSaving').on('click', () => toggleModal('addSavingModal'));
+  $('#newSaving').on('click', () => {
+    $('#savingNameInput').focus();
+    toggleModal('addSavingModal')
+  });
 
   $('#submitAddSavingForm').on('click', () => {
     const handleFormErr = errMsg => {
@@ -48,5 +60,30 @@ $(function(){
       handleFormErr(err.message);
     });
 
+  });
+
+  $('.saving-item').on('click', function(){
+    if ($(this).hasClass('active')) return;
+
+    $('.saving-item').removeClass('active');
+    $(this).addClass('active');
+
+    let savingId = $(this).attr('data-saving-id');
+    const reqBody = { 'id': savingId };
+
+    fetch('/session', {
+      'method': 'PUT',
+      'headers': {
+        'Content-Type': 'application/json',
+      },
+      'body': JSON.stringify(reqBody),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) throw new Error(data.error);
+    })
+    .catch(err => {
+      alert(`Unable to update session: ${err.message}`);
+    });
   });
 });

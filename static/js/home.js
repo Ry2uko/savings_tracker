@@ -1,44 +1,18 @@
-const CURRENCIES = {
-  "USD": "$",
-  "CAD": "$",
-  "AUD": "$",
-  "PHP": "₱",
-  "EUR": "€",
-  "JPY": "¥",
-  "GBP": "£",
-};
-
-const COLORS = {
-  'blue': '#2563eb',
-  'yellow': '#f6bb09',
-  'green': '#22C55E',
-  'red': '#ef4444',
-  'gray': '#333'
-};
-
-const barAnimDurationMs = 350; 
-
-let saving;
+let savingData;
 let bar;
 let addSavingBtnLock = false;
 
 $(function(){
-  // Get session
-  fetch('/saving')  
-  .then(response => response.json())
-  .then(data => {
-    saving = data.saving;
-
-    if (saving === null) {
-      $('.none-loaded').removeClass('hidden');
-    } else {
-      initializeHome(saving);
-    }
+  sessionRequest.then(sessionData => {
+    savingData = sessionData;
+    initializeHome(sessionData);
+  }).catch(() => {
+    $('.none-loaded').removeClass('hidden');
   });
 
   // Event listeners
   $('#addToSaving').on('click', () => {
-    if (!saving || saving['is_goal_completed']) return;
+    if (!savingData || savingData['is_goal_completed']) return;
 
     $('#modifyAmountModal').attr('data-transaction', 'add');
     $('#modifyAmountModal .form-title').text('Add To Saving');
@@ -52,7 +26,7 @@ $(function(){
   });
 
   $('.withdrawFromSaving').on('click', () => {
-    if (!saving || saving['amount_saved'] <= 0) return;
+    if (!savingData || savingData['amount_saved'] <= 0) return;
 
     $('#modifyAmountModal').attr('data-transaction', 'withdraw');
     $('#modifyAmountModal .form-title').text('Withdraw From Saving');
@@ -109,15 +83,15 @@ $(function(){
       .then(data => {
         if (data.error) throw new Error(data.error);
 
-        saving = data.saving;
-        $('#savingAmountInput').val('');
+        savingData = data.saving;
+        $('#savingAmountInput').val('').focus();
         toggleModal('modifyAmountModal');
-        displayDetails(saving);
+        displayDetails(savingData);
 
-        let progressPercentage = Math.round((saving['amount_saved'] / saving['amount_goal']) * 100);
-        if (progressPercentage === 100 && saving['amount_saved'] !== saving['amount_goal']) {
+        let progressPercentage = Math.round((savingData['amount_saved'] / savingData['amount_goal']) * 100);
+        if (progressPercentage === 100 && savingData['amount_saved'] !== savingData['amount_goal']) {
           progressPercentage = 99;
-        } else if (progressPercentage === 0 && saving['amount_saved'] !== 0) {
+        } else if (progressPercentage === 0 && savingData['amount_saved'] !== 0) {
           progressPercentage = 1;
         }
 
@@ -133,14 +107,14 @@ $(function(){
 // Helper functions
 function initializeHome(saving) {
   /* Initialize home page */
-
+  
   let progressPercentage = Math.round((saving['amount_saved'] / saving['amount_goal']) * 100);
   if (progressPercentage === 100 && saving['amount_saved'] !== saving['amount_goal']) {
     progressPercentage = 99;
   } else if (progressPercentage === 0 && saving['amount_saved'] !== 0) {
     progressPercentage = 1;
   }
-  
+
   // Progress bar
   bar = new ldBar('#savingsProgress', {
     'preset':  'circle',
@@ -150,6 +124,8 @@ function initializeHome(saving) {
     'max': 100,
     'value': progressPercentage,
   });
+
+  $('.saving-container').removeClass('hidden').addClass('flex');
 
   displayDetails(saving);
 }
@@ -175,11 +151,8 @@ function displayDetails(saving) {
   $('#savingName').text(savingName);
   $('#savingAmountRemaining').text(savingAmountRemaining)
 
-  // modal
-  $('#formCurrencyLabel').val(savingCurrency)
-  $('.saving-container').removeClass('hidden').addClass('flex');
-
   // default
+  $('#formCurrencyLabel').val(savingCurrency)
   $('#savingsProgress .mainline').attr('stroke', COLORS['blue']);
   $('.saving-details-container .detail-highlight').css('color', COLORS['blue']);
   $('#addToSaving').css({

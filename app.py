@@ -58,6 +58,51 @@ with app.app_context():
 supported_currency_codes = ["USD", "PHP", "EUR", "JPY", "GBP", "CAD", "AUD"]
 
 
+# Session
+@app.route('/session', methods=['GET', 'PUT'])
+def session_route():
+    """Return and change session's saving data"""
+
+    saving = None
+    # FOR DEVELOPMENT ONLY
+    # session['saving_id'] = 1
+
+    if request.method == 'GET':
+        if 'saving_id' in session:
+            saving_data = db.session.get(Saving, session['saving_id'])
+            saving_data_history = saving_data.history.split(',') if saving_data.history else []
+            saving = {
+                'amount_goal': saving_data.amount_goal,
+                'amount_saved': saving_data.amount_saved,
+                'name': saving_data.name,
+                'is_goal_completed': saving_data.is_goal_completed,
+                'history': saving_data_history,
+                'id': saving_data.id,
+                'created_date': saving_data.created_date,
+                'goal_completed_date': saving_data.goal_completed_date,
+                'currency': saving_data.currency,
+            }
+
+        return jsonify({ 'saving': saving }), 200
+
+    elif request.method == 'PUT':
+        if 'id' not in request.json:
+            return handle_err('No id.')
+
+        id = request.json['id']
+        if not id:
+            return handle_err('Invalid id.')
+
+        saving = db.session.get(Saving, id)
+        if saving == None:
+            return handle_err('Id not found.')
+        
+        session['saving_id'] = id
+
+        saving_data = saving_schema.dump(saving)
+        return jsonify({ 'saving': saving_data }), 200
+
+
 # Routes
 @app.route('/home')
 def home():
@@ -66,38 +111,13 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/saving')
-def session_route():
-    """Return saving data in session"""
-
-    saving = None
-
-    session['saving_id'] = 1
-    if 'saving_id' in session:
-        saving_data = db.session.get(Saving, session['saving_id'])
-        saving_data_history = saving_data.history.split(',') if saving_data.history else []
-        saving = {
-            'amount_goal': saving_data.amount_goal,
-            'amount_saved': saving_data.amount_saved,
-            'name': saving_data.name,
-            'is_goal_completed': saving_data.is_goal_completed,
-            'history': saving_data_history,
-            'id': saving_data.id,
-            'created_date': saving_data.created_date,
-            'goal_completed_date': saving_data.goal_completed_date,
-            'currency': saving_data.currency,
-        }
-
-    return jsonify({ 'saving': saving }), 200
-
-
 @app.route('/savings')
 def savings():
-    """Render savings page and savings (name only)"""
+    """Render savings page and savings (name & id only)"""
 
     all_savings = Saving.query.all()
     result = savings_schema.dump(all_savings)
-    savings = [saving['name'] for saving in result]
+    savings = [[saving['name'], saving['id']] for saving in result]
 
     return render_template('savings.html', savings=savings)
 
@@ -319,7 +339,7 @@ def savings_api():
         db.session.commit()
 
         saving_data = saving_schema.dump(saving)
-        return { 'saving': saving_data }, 200
+        return jsonify({ 'saving': saving_data }), 200
 
 
 @app.route('/savings/api/<string:id>')

@@ -1,6 +1,12 @@
 /* TO DO:
-- (12/11/23) /savings - edit saving
-  - TODO: loading a saving (+ handling sessions from server & client)
+- (13/11/23~14/11/23) /savings
+  - TODO: color of active border when goal is already completed, not started, and in progress
+  - TODO: add currency input just like in the modal in /home
+  - TODO: edit saving button & modal
+  - TODO: modal (functions, init, etc.)
+  - TODO: modal inputs
+  - TODO: handling modal inputs (validation, submitting, and after submit)
+
 */
 
 /* (NEXT) 
@@ -10,11 +16,30 @@
 - video making
 */
 
+const CURRENCIES = {
+  "USD": "$",
+  "CAD": "$",
+  "AUD": "$",
+  "PHP": "₱",
+  "EUR": "€",
+  "JPY": "¥",
+  "GBP": "£",
+};
+
+const COLORS = {
+  'blue': '#2563eb',
+  'yellow': '#f6bb09',
+  'green': '#22C55E',
+  'red': '#ef4444',
+  'gray': '#333'
+};
+
 const modalAnimMS = 250;
+const barAnimDurationMs = 350; 
 
 // get saving in session
 const sessionRequest = new Promise((resolve, reject) => {
-  fetch('/saving')
+  fetch('/session')
     .then(response => response.json())
     .then(sessionData => {
       if (sessionData.saving === null) {
