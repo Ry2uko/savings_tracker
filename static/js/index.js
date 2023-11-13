@@ -1,6 +1,5 @@
 /* TO DO:
 - (13/11/23~14/11/23) /savings
-  - TODO: new progress bar library: https://kimmobrunfeldt.github.io/progressbar.js/
   - TODO: add currency input just like in the modal in /home
   - TODO: edit saving button & modal
   - TODO: modal (functions, init, etc.)
@@ -35,7 +34,7 @@ const COLORS = {
 };
 
 const modalAnimMS = 250;
-const barAnimDurationMs = 350; 
+const barAnimDurationMs = 300; 
 
 // get saving in session
 const sessionRequest = new Promise((resolve, reject) => {

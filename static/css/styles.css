@@ -53,15 +53,6 @@ body, html {
     height: 380px !important;
 }
 
-#homeContainer #savingProgress path.mainline {
-    transition: background-color 150ms;
-    stroke-width: 5;
-}
-
-#homeContainer #savingProgress path.baseline {
-    stroke-width: 5;
-}
-
 #homeContainer button.disabled {
     background-color: var(--gray);
     pointer-events: none;

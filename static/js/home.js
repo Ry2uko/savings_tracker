@@ -1,12 +1,13 @@
 let savingData;
-let bar;
+let bar, barProgress;
 let addSavingBtnLock = false;
 
 $(function(){
   sessionRequest.then(sessionData => {
     savingData = sessionData;
     initializeHome(sessionData);
-  }).catch(() => {
+  }).catch(err => {
+    console.error(err);
     $('.none-loaded').removeClass('hidden');
   });
 
@@ -89,13 +90,7 @@ $(function(){
         displayDetails(savingData);
 
         let progressPercentage = Math.round((savingData['amount_saved'] / savingData['amount_goal']) * 10000) / 100;
-        if (progressPercentage === 100 && savingData['amount_saved'] !== savingData['amount_goal']) {
-          progressPercentage = 99;
-        } else if (progressPercentage === 0 && savingData['amount_saved'] !== 0) {
-          progressPercentage = 1;
-        }
-
-        bar.set(progressPercentage, true);
+        barSetValue(progressPercentage);
       })
       .catch(err => {
         handleFormErr(err.message);
@@ -107,26 +102,20 @@ $(function(){
 // Helper functions
 function initializeHome(saving) {
   /* Initialize home page */
+
+  // progress bar
+  bar = new ProgressBar.Circle('#savingProgress', {
+    'color': COLORS['blue'],
+    'strokeWidth': 5,
+    'trailWidth': 5,
+    'trailColor': '#ddd',
+    'duration': barAnimDurationMs,
+  });
   
   let progressPercentage = Math.round((saving['amount_saved'] / saving['amount_goal']) * 10000) / 100;
-  if (progressPercentage === 100 && saving['amount_saved'] !== saving['amount_goal']) {
-    progressPercentage = 99;
-  } else if (progressPercentage === 0 && saving['amount_saved'] !== 0) {
-    progressPercentage = 1;
-  }
-
-  // Progress bar
-  bar = new ldBar('#savingProgress', {
-    'preset':  'circle',
-    'stroke-width': 5,
-    'duration': (barAnimDurationMs/1000),
-    'min': 0,
-    'max': 100,
-    'value': progressPercentage,
-  });
+  barSetValue(progressPercentage, 'set');
 
   $('.saving-container').removeClass('hidden').addClass('flex');
-
   displayDetails(saving);
 }
 
@@ -153,13 +142,13 @@ function displayDetails(saving) {
 
   // default
   $('#formCurrencyLabel').val(savingCurrency)
-  $('#savingProgress .mainline').attr('stroke', COLORS['blue']);
+  $(bar.path).attr('stroke', COLORS['blue']);
   $('.saving-details-container .detail-highlight').css('color', COLORS['blue']);
   $('#addToSaving').removeClass('disabled');
   $('.withdrawFromSaving').removeClass('disabled');
 
   if (saving['is_goal_completed']) {
-    $('#savingProgress .mainline').attr('stroke', COLORS['yellow']);
+    $(bar.path).attr('stroke', COLORS['yellow']);
     $('.saving-details-container .detail-highlight').css('color', COLORS['yellow']);
     $('#addToSaving').addClass('disabled');
   } else if (saving['amount_saved'] <= 0) {
@@ -188,4 +177,20 @@ function formatAmount(amount, currency) {
   const formattedAmount = amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 
   return `${currency}${formattedAmount}`;
+}
+
+function barSetValue(value, progress='animate') {
+  if (value >= 100 ) {
+    value = 100;
+  } else if (value <= 0) {
+    value = 0;
+  }
+  
+  if (progress === 'set') {
+    bar.set(value / 100)
+  } else if (progress === 'animate') {
+    bar.animate(value / 100);
+  }
+
+  $('#savingProgressLabel').text(`${value.toFixed(2)}%`)
 }
