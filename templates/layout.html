@@ -6,9 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="/static/css/styles_main.css" type="text/css" />
-        <link rel="stylesheet" type="text/css" href="/static/css/loading-bar.min.css" />
         <script src="https://kit.fontawesome.com/b40850cb13.js" crossorigin="anonymous"></script>
-        <script type="text/javascript" src="/static/js/loading-bar.min.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='node_modules/progressbar.js/dist/progressbar.min.js') }}"></script>
     </head>
     <body>
         <!-- Modals -->
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <script type="text/javascript" src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') }}"></script>
+
         <script type="text/javascript" src="static/js/index.js"></script>
         {% block script %}{% endblock %}
     </body>

@@ -26,7 +26,7 @@
                 text-slate-500 md:w-[12%] md:text-[1.6rem]" disabled>
                 <input type="text" id="savingAmountInput" class="bg-white
                 border rounded-r-md font-noto-sans border-slate-300 py-4 px-4 w-[85%] text-[1.6rem] 
-                focus:outline-none md:w-[73%] md:rounded-none"/>    
+                focus:outline-none focus:border-slate-600 md:w-[73%] md:rounded-none"/>    
                 <button class="submitModifyAmountForm icon rounded-r-md
                 font-noto-sans py-2 w-[15%] text-[1.6rem] hidden md:block">
                     <i class=""></i>
@@ -66,7 +66,11 @@
 
             <div class="saving-savings-container flex flex-col justify-center 
             my-10 items-center sm:my-8 lg:my-6">
-                <div class="label-center" id="savingProgress"></div>
+                <div class="relative" id="savingProgress">
+                    <div id="savingProgressLabel" class="text-[3.2rem] opacity-90
+                    font-yanone-kaffeesatz absolute top-1/2 left-1/2
+                    -translate-x-1/2 -translate-y-1/2">0.00%</div>
+                </div>
             </div>
             
             <div class="saving-details-container flex flex-col bg-white border

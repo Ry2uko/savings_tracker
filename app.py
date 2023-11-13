@@ -225,6 +225,7 @@ def savings_api():
             added_amount = round(added_amount, 2)
             saving.history = append_to_history(saving.history, added_amount, 'add')
             saving.amount_saved += added_amount
+            saving.amount_saved = round(saving.amount_saved, 2)
 
             # If user reached the amount goal
             if saving.amount_saved >= saving.amount_goal:
@@ -254,6 +255,7 @@ def savings_api():
             withdrawed_amount = round(withdrawed_amount, 2)
             saving.history = append_to_history(saving.history, withdrawed_amount, 'withdraw')
             saving.amount_saved -= withdrawed_amount
+            saving.amount_saved = round(saving.amount_saved, 2)
 
             if saving.is_goal_completed and (saving.amount_saved-withdrawed_amount) < saving.amount_goal:
                 """  the other condition is not actually necessary, since if 
@@ -426,6 +428,10 @@ def sort_savings(savings):
         empty = saving['amount_saved'] <= 0
         completed = saving['is_goal_completed']
         in_progress = saving['amount_saved'] > 0 and saving['amount_saved'] < saving['amount_goal']
+
+        if in_progress:
+            progress_percentage = round((saving['amount_saved'] / saving['amount_goal']) * 100, 2)
+            return (in_progress, progress_percentage, empty, completed)
 
         return (in_progress, empty, completed)
     
