@@ -1456,6 +1456,10 @@ body, html {
     width: 73%;
   }
 
+  .md\:w-\[88\%\]{
+    width: 88%;
+  }
+
   .md\:grid-cols-2{
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

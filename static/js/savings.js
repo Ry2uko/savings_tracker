@@ -3,7 +3,17 @@ let savingData;
 $(function(){
   sessionRequest.then(sessionData => {
     savingData = sessionData;
+
+    let savingCurrency = validateCurrency(savingData['currency']);
+    if (savingCurrency === null) {
+      savingCurrency = "$";
+      console.error('Invalid currency');
+    }
+
+    // default
+    $('#formCurrencyLabel').val(savingCurrency)
     $(`.saving-item[data-saving-id='${savingData.id}']`).addClass('active');
+    
   }).catch(() => {
     console.log('no session loaded :D');
   });

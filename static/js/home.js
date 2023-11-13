@@ -1,6 +1,5 @@
 let savingData;
-let bar, barProgress;
-let addSavingBtnLock = false;
+let bar;
 
 $(function(){
   sessionRequest.then(sessionData => {
@@ -155,28 +154,6 @@ function displayDetails(saving) {
     $('.saving-details-container .detail-highlight').css('color', '#000');
     $('.withdrawFromSaving').addClass('disabled');
   }
-}
-
-function validateCurrency(currency) {
-  /* check if currency is valid (returns currency symbol) */
-
-  const supportedCurrencies = Object.keys(CURRENCIES);
-  currency = currency.toUpperCase();
-  if (supportedCurrencies.includes(currency)) {
-    return CURRENCIES[currency];
-  }
-
-  return null;
-}
-
-function formatAmount(amount, currency) {
-  /* format amount to fixed-point format w/ currency symbol (e.g. 5 -> 5.00)*/
-
-  if (isNaN(amount)) return null;
-
-  const formattedAmount = amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-
-  return `${currency}${formattedAmount}`;
 }
 
 function barSetValue(value, progress='animate') {

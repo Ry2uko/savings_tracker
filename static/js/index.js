@@ -1,6 +1,5 @@
 /* TO DO:
 - (13/11/23~14/11/23) /savings
-  - TODO: add currency input just like in the modal in /home
   - TODO: edit saving button & modal
   - TODO: modal (functions, init, etc.)
   - TODO: modal inputs
@@ -56,7 +55,7 @@ $(function(){
   console.log('Document Ready!');  
 
   // clean inputs
-  $('input[type="text"]').val('');
+  $('input[type="text"]:not(:disabled)').val('');
 
   $('#openMobileNavbar').on('click', () => {
     toggleModal('mobileSidebar');
@@ -118,4 +117,26 @@ function toggleModal(modalId, ms=modalAnimMS, cb) {
       if (cb) cb();
     });
   }
+}
+
+function validateCurrency(currency) {
+  /* check if currency is valid (returns currency symbol) */
+
+  const supportedCurrencies = Object.keys(CURRENCIES);
+  currency = currency.toUpperCase();
+  if (supportedCurrencies.includes(currency)) {
+    return CURRENCIES[currency];
+  }
+
+  return null;
+}
+
+function formatAmount(amount, currency) {
+  /* format amount to fixed-point format w/ currency symbol (e.g. 5 -> 5.00)*/
+
+  if (isNaN(amount)) return null;
+
+  const formattedAmount = amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
+  return `${currency}${formattedAmount}`;
 }
