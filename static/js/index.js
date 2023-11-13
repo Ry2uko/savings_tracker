@@ -1,6 +1,6 @@
 /* TO DO:
 - (13/11/23~14/11/23) /savings
-  - TODO: color of active border when goal is already completed, not started, and in progress
+  - TODO: new progress bar library: https://kimmobrunfeldt.github.io/progressbar.js/
   - TODO: add currency input just like in the modal in /home
   - TODO: edit saving button & modal
   - TODO: modal (functions, init, etc.)
@@ -58,6 +58,10 @@ $(function(){
 
   // clean inputs
   $('input[type="text"]').val('');
+
+  $('#openMobileNavbar').on('click', () => {
+    toggleModal('mobileSidebar');
+  });
 });
 
 function toggleModal(modalId, ms=modalAnimMS, cb) {
@@ -73,6 +77,11 @@ function toggleModal(modalId, ms=modalAnimMS, cb) {
       'opacity': 0.8,
     }, ms);
 
+    $(`.modal:not(#${modalId})`).css({
+      'opacity': 0,
+      'display': 'none',
+    });
+
     modal.css({
       'display': 'flex',
     }).animate({
@@ -80,6 +89,12 @@ function toggleModal(modalId, ms=modalAnimMS, cb) {
     }, ms);
 
     modal.find('.close-modal-btn').on('click', () => { toggleModal(modalId, ms, cb) });
+    
+    $(document).on('mouseup', e => {
+      if (!modal.is(e.target) && modal.has(e.target).length === 0) {
+        toggleModal(modalId, ms, cb);
+      }
+    });
   } else {
     $('.parent-container').animate({
       'opacity': 1,
@@ -99,6 +114,8 @@ function toggleModal(modalId, ms=modalAnimMS, cb) {
       });
 
       modal.find('.close-modal-btn').off('click');
+      $(document).off('mouseup');
+
       if (cb) cb();
     });
   }

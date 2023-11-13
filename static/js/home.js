@@ -88,7 +88,7 @@ $(function(){
         toggleModal('modifyAmountModal');
         displayDetails(savingData);
 
-        let progressPercentage = Math.round((savingData['amount_saved'] / savingData['amount_goal']) * 100);
+        let progressPercentage = Math.round((savingData['amount_saved'] / savingData['amount_goal']) * 10000) / 100;
         if (progressPercentage === 100 && savingData['amount_saved'] !== savingData['amount_goal']) {
           progressPercentage = 99;
         } else if (progressPercentage === 0 && savingData['amount_saved'] !== 0) {
@@ -108,7 +108,7 @@ $(function(){
 function initializeHome(saving) {
   /* Initialize home page */
   
-  let progressPercentage = Math.round((saving['amount_saved'] / saving['amount_goal']) * 100);
+  let progressPercentage = Math.round((saving['amount_saved'] / saving['amount_goal']) * 10000) / 100;
   if (progressPercentage === 100 && saving['amount_saved'] !== saving['amount_goal']) {
     progressPercentage = 99;
   } else if (progressPercentage === 0 && saving['amount_saved'] !== 0) {
@@ -116,7 +116,7 @@ function initializeHome(saving) {
   }
 
   // Progress bar
-  bar = new ldBar('#savingsProgress', {
+  bar = new ldBar('#savingProgress', {
     'preset':  'circle',
     'stroke-width': 5,
     'duration': (barAnimDurationMs/1000),
@@ -153,34 +153,18 @@ function displayDetails(saving) {
 
   // default
   $('#formCurrencyLabel').val(savingCurrency)
-  $('#savingsProgress .mainline').attr('stroke', COLORS['blue']);
+  $('#savingProgress .mainline').attr('stroke', COLORS['blue']);
   $('.saving-details-container .detail-highlight').css('color', COLORS['blue']);
-  $('#addToSaving').css({
-    'backgroundColor': COLORS['green'],
-    'opacity': 1,
-    'pointerEvents': 'auto',
-  });
-  $('.withdrawFromSaving').css({
-    'backgroundColor': COLORS['red'],
-    'opacity': 1,
-    'pointerEvents': 'auto',
-  });
+  $('#addToSaving').removeClass('disabled');
+  $('.withdrawFromSaving').removeClass('disabled');
 
   if (saving['is_goal_completed']) {
-    $('#savingsProgress .mainline').attr('stroke', COLORS['yellow']);
+    $('#savingProgress .mainline').attr('stroke', COLORS['yellow']);
     $('.saving-details-container .detail-highlight').css('color', COLORS['yellow']);
-    $('#addToSaving').css({
-      'backgroundColor': COLORS['gray'],
-      'opacity': 0.85,
-      'pointerEvents': 'none',
-    });
+    $('#addToSaving').addClass('disabled');
   } else if (saving['amount_saved'] <= 0) {
     $('.saving-details-container .detail-highlight').css('color', '#000');
-    $('.withdrawFromSaving').css({
-      'backgroundColor': COLORS['gray'],
-      'opacity': 0.85,
-      'pointerEvents': 'none',
-    });
+    $('.withdrawFromSaving').addClass('disabled');
   }
 }
 

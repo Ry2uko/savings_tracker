@@ -12,6 +12,18 @@
     </head>
     <body>
         <!-- Modals -->
+        <div id="mobileSidebar" class="modal hidden opacity-0">
+            <div class="flex flex-col nav-list">
+                <a href="/home" class="nav-item px-[6rem] py-[1.5rem] text-[1.55rem] font-noto-sans text-center
+                cursor-pointer transition duration-100 rounded-t-md hover:bg-blue-500 hover:text-white">Home</a>
+                <a href="/stats" class="nav-item px-[6rem] py-[1.5rem] text-[1.55rem] font-noto-sans text-center
+                cursor-pointer transition duration-100 hover:bg-blue-500 hover:text-white">Stats</a>
+                <a href="/savings" class="nav-item px-[6rem] py-[1.5rem] text-[1.55rem] font-noto-sans text-center
+                cursor-pointer transition duration-100 hover:bg-blue-500 hover:text-white">Savings</a>
+                <a href="/settings" class="nav-item px-[6rem] py-[1.5rem] text-[1.55rem] font-noto-sans text-center
+                cursor-pointer transition duration-100 rounded-b-md hover:bg-blue-500 hover:text-white">Settings</a>
+            </div>
+        </div>
         {% block modal %}{% endblock %}
         <!-- *** -->
 
@@ -44,7 +56,8 @@
 
             <div class="main flex-1 h-full">
                 <button type="button" class="px-4 py-2 m-4 rounded-md text-3xl
-                absolute top-0 left-0 z-[99] cursor:pointer bg-white border md:hidden">
+                absolute top-0 left-0 z-[99] cursor:pointer bg-white border md:hidden"
+                id="openMobileNavbar">
                     <i class="fa-solid fa-bars"></i>
                 </button>
                 

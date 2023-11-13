@@ -44,7 +44,7 @@
 {% block main%}
     <div id="homeContainer" class="flex flex-col h-full py-8 overflow-y-auto relative">
         <div class="saving-container hidden flex-col flex-1 items-center">
-            <button type="button" class="absolute top-0 right-0
+            <button type="button" class="absolute bg-green-500 top-0 right-0
             pl-6 pr-2 pb-6 pt-2 z-[99] rounded-bl-full transition ease-out duration-50 
             text-2xl cursor-pointer hover:scale-[1.10] hover:translate-x-[-2px] hover:translate-y-[2px]
             md:pl-8 md:pr-4 md:pb-8 md:pt-4"
@@ -52,13 +52,13 @@
                 <i class="fa-solid fa-plus"></i>
             </button>
 
-            <button type="button" class="withdrawFromSaving absolute hidden top-0 left-0
+            <button type="button" class="withdrawFromSaving bg-red-500 absolute hidden top-0 left-0
             pr-8 pl-4 pb-8 pt-4 z-[99] cursor-pointer rounded-br-full transition ease-out duration-50 
             text-2xl hover:scale-[1.10] hover:translate-x-[2px] hover:translate-y-[2px]
             md:block">
                 <i class="fa-solid fa-minus"></i>
             </button>
-            <button type="button" class="withdrawFromSaving absolute right-0 top-[80px]
+            <button type="button" class="withdrawFromSaving bg-red-500 absolute right-0 top-[80px]
             pl-6 pr-2 py-4 rounded-l-full z-[99] cursor-pointer transition ease-out duration-50 
             text-2xl hover:scale-[1.10] hover:translate-x-[-2px] md:hidden">
                 <i class="fa-solid fa-minus"></i>
@@ -66,7 +66,7 @@
 
             <div class="saving-savings-container flex flex-col justify-center 
             my-10 items-center sm:my-8 lg:my-6">
-                <div class="label-center" id="savingsProgress"></div>
+                <div class="label-center" id="savingProgress"></div>
             </div>
             
             <div class="saving-details-container flex flex-col bg-white border

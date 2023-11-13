@@ -113,11 +113,23 @@ def home():
 
 @app.route('/savings')
 def savings():
-    """Render savings page and savings (name & id only)"""
+    """Render savings page and savings (name, id, & status)"""
+
+    def get_status(saving):
+        """ return status of each saving """
+
+        if saving['is_goal_completed']:
+            return 'completed'
+        elif saving['amount_saved'] <= 0:
+            return 'empty'
+
+        return 'in-progress'
 
     all_savings = Saving.query.all()
     result = savings_schema.dump(all_savings)
-    savings = [[saving['name'], saving['id']] for saving in result]
+    result = sort_savings(result)
+
+    savings = [[saving['name'], saving['id'], get_status(saving)] for saving in result]
 
     return render_template('savings.html', savings=savings)
 
@@ -142,7 +154,8 @@ def savings_api():
     if request.method == 'GET':
         all_savings = Saving.query.all()
         result = savings_schema.dump(all_savings)
-
+        result = sort_savings(result)
+        
         # parse all date to timezone if user provided one (e.g. '?tz=Asia/Manila')
         tz = request.args.get('tz')
         if tz:
@@ -404,6 +417,19 @@ def append_to_history(history, amount, append_type='edit'):
     history = ','.join(history_list)
 
     return history
+
+
+def sort_savings(savings):
+    """ sort by status, progress->empty->completed """
+
+    def sort_result(saving):
+        empty = saving['amount_saved'] <= 0
+        completed = saving['is_goal_completed']
+        in_progress = saving['amount_saved'] > 0 and saving['amount_saved'] < saving['amount_goal']
+
+        return (in_progress, empty, completed)
+    
+    return sorted(savings, key=sort_result, reverse=True)
 
 
 if __name__ == '__main__':
