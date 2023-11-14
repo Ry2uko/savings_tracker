@@ -1,9 +1,10 @@
 /* TO DO:
-- (13/11/23~14/11/23) /savings
+- (15/11/23) /savings
   - TODO: edit saving button & modal
   - TODO: modal (functions, init, etc.)
   - TODO: modal inputs
   - TODO: handling modal inputs (validation, submitting, and after submit)
+  - TODO: chartjs test
 
 */
 

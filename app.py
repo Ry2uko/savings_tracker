@@ -4,7 +4,7 @@ from flask_marshmallow import Marshmallow
 from datetime import datetime, timedelta
 from dateutil.parser import parse
 import os
-import pytz
+
 
 # Initialize app & database
 app = Flask(__name__)
@@ -70,6 +70,7 @@ def session_route():
     if request.method == 'GET':
         if 'saving_id' in session:
             saving_data = db.session.get(Saving, session['saving_id'])
+            
             saving_data_history = saving_data.history.split(',') if saving_data.history else []
             saving = {
                 'amount_goal': saving_data.amount_goal,
@@ -156,10 +157,9 @@ def savings_api():
         result = savings_schema.dump(all_savings)
         result = sort_savings(result)
         
-        # parse all date to timezone if user provided one (e.g. '?tz=Asia/Manila')
-        tz = request.args.get('tz')
-        if tz:
-            parse_time_zone(tz, result)
+        # convert each saving history to a list; and
+        for saving in result:
+            saving['history'] = saving['history'].split(',') if saving['history'] else []
 
         return jsonify({ 'savings': result }), 200
 
@@ -366,6 +366,8 @@ def saving_api(id):
         return handle_err('Id not found.')
     saving_data = saving_schema.dump(saving)
 
+    saving_data['history'] = saving_data['history'].split(',') if saving_data['history'] else []
+
     return jsonify({ 'saving': saving_data }), 200
 
 
@@ -381,24 +383,8 @@ def handle_err(msg, status=400):
     return (jsonify({'error': msg}), status)
 
 
-def parse_time_zone(tz, savings):
-    """Convert dates of every saving to given timezone"""
-
-    try:
-        user_timezone = pytz.timezone(tz) 
-    except pytz.UnknownTimeZoneError:
-        return
-
-    for saving in savings:
-        created_date = datetime.fromisoformat(saving['created_date'])
-        created_date = created_date.astimezone(user_timezone)
-        print(created_date)
-        saving['created_date'] = created_date.strftime("%Y-%m-%d %H:%M:%S%z")
-
-        if saving['goal_completed_date']:
-            goal_completed_date = datetime.fromisoformat(saving['goal_completed_date'])
-            goal_completed_date = goal_completed_date.astimezone(user_timezone)
-            saving['goal_completed_date'] = goal_completed_date.strftime("%Y-%m-%d %H:%M:%S%z")
+def parse_history(history):
+    pass
 
 
 def append_to_history(history, amount, append_type='edit'):
