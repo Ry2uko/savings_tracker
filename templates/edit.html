@@ -1,19 +1,19 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Settings
+    Edit
 {% endblock %}
 
 {% block modal %}
 {% endblock %}
 
 {% block main %}
-    <div id="settingsContainer" class="flex flex-col h-full py-8 overflow-y-auto mt-[4rem] md:mt-0">
-        <div class="settings-container hidden flex-col items-center">
+    <div id="editContainer" class="flex flex-col h-full py-8 overflow-y-auto mt-[4rem] md:mt-0">
+        <div class="edit-container hidden flex-col items-center">
             <div class="header-container mx-7 flex items-center md:mx-10">
-                <h2 class="font-yanone-kaffeesatz text-[3rem] flex-1">Settings</h2>
+                <h2 class="font-yanone-kaffeesatz text-[3rem] flex-1">Edit</h2>
             </div>
-            <div class="main-settings-container">
+            <div class="main-edit-container">
                 
             </div>
         </div>
@@ -22,5 +22,5 @@
 {% endblock %}
 
 {% block script %}
-    <script type="text/javascript" src="static/js/settings.js"></script>
+    <script type="text/javascript" src="static/js/edit.js"></script>
 {% endblock %}

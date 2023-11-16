@@ -141,10 +141,10 @@ def stats():
     return render_template('stats.html')
 
 
-@app.route('/settings')
-def settings():
+@app.route('/edit')
+def edit():
     """Render setting page"""
-    return render_template('settings.html')
+    return render_template('edit.html')
 
 
 # API

@@ -1,10 +1,10 @@
 /* TO DO:
 - (18/11/23-19/11/23)
-  - TODO: /settings
-    - TODO: edit saving button & modal
-    - TODO: modal (functions, init, etc.)
-    - TODO: modal inputs
-    - TODO: handling modal inputs (validation, submitting, and after submit)
+  - TODO: /edit
+    - TODO: Edit saving name
+    - TODO: Edit amount saved
+    - TODO: Edit currency
+    - TODO: Edit amount goal
 */
 
 /* (NEXT) 

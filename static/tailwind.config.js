@@ -1,4 +1,5 @@
 module.exports = {
+  darkMode: 'class',
   content: ['../templates/*.html'],
   theme: {
     screens: {
@@ -9,7 +10,8 @@ module.exports = {
     },
     extend: {
       colors: {
-        
+        'dark': '#101a23',
+        'dark-2': '#182734'
       },
     },
     fontFamily: {
