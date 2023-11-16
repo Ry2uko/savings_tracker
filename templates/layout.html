@@ -8,59 +8,57 @@
         <link rel="stylesheet" href="/static/css/styles_main.css" type="text/css" />
         <script src="https://kit.fontawesome.com/b40850cb13.js" crossorigin="anonymous"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='node_modules/progressbar.js/dist/progressbar.min.js') }}"></script>
     </head>
     <body>
         <!-- Modals -->
         <div id="mobileSidebar" class="modal hidden opacity-0">
             <div class="flex flex-col nav-list">
                 <a href="/home" class="nav-item px-[6rem] py-[1.5rem] text-[1.55rem] font-noto-sans text-center
-                cursor-pointer transition duration-100 rounded-t-md hover:bg-blue-500 hover:text-white">Home</a>
+                cursor-pointer rounded-t-md transform duration-150 hover:scale-[1.05]">Home</a>
                 <a href="/stats" class="nav-item px-[6rem] py-[1.5rem] text-[1.55rem] font-noto-sans text-center
-                cursor-pointer transition duration-100 hover:bg-blue-500 hover:text-white">Stats</a>
+                cursor-pointer transform duration-150 hover:scale-[1.05]">Stats</a>
                 <a href="/savings" class="nav-item px-[6rem] py-[1.5rem] text-[1.55rem] font-noto-sans text-center
-                cursor-pointer transition duration-100 hover:bg-blue-500 hover:text-white">Savings</a>
+                cursor-pointer transform duration-150 hover:scale-[1.05]">Savings</a>
                 <a href="/settings" class="nav-item px-[6rem] py-[1.5rem] text-[1.55rem] font-noto-sans text-center
-                cursor-pointer transition duration-100 rounded-b-md hover:bg-blue-500 hover:text-white">Settings</a>
+                cursor-pointer rounded-b-md transform duration-150 hover:scale-[1.05]">Settings</a>
             </div>
         </div>
         {% block modal %}{% endblock %}
         <!-- *** -->
 
         <div class="parent-container bg-slate-100 w-full h-full flex flex-row relative">
-            <div class="sidebar hidden bg-gray w-4/12 h-full max-w-[360px]
-            overflow-y-auto bg-white px-5 py-2 shadow-md md:block">
+            <div class="sidebar hidden bg-gray w-4/12 h-full overflow-y-auto bg-white px-5 py-2 
+            shadow-md md:block md:w-[240px] lg:w-[280px] xl:w-[340px]">
                 <div class="py-10 text-center">
                     <h1 class="text-4xl font-lato text-blue-600">Savings Tracker</h2>
                 </div>
 
                 <div class="flex flex-col mt-5 pl-2 nav-list">
-                    <span class="flex items-center mx-2 my-7 transition-colors hover:text-blue-600 ">
+                    <span class="flex items-center mx-2 my-7">
                         <i class="fa-solid text-2xl fa-house mr-3"></i>
-                        <a href="/home" class="text-2xl">Home</a>
+                        <a href="/home" class="text-2xl transform duration-150 hover:scale-[1.05]">Home</a>
                     </span>
-                    <span class="flex items-center mx-2 my-7 transition-colors hover:text-blue-600">
+                    <span class="flex items-center mx-2 my-7">
                         <i class="fa-solid text-2xl fa-chart-simple mr-3"></i>
-                        <a href="/stats" class="text-2xl">Stats</a>
+                        <a href="/stats" class="text-2xl transform duration-150 hover:scale-[1.05]">Stats</a>
                     </span>
-                    <span class="flex items-center mx-2 my-7 transition-colors hover:text-blue-600">
+                    <span class="flex items-center mx-2 my-7">
                         <i class="fa-solid text-2xl fa-piggy-bank mr-3"></i>
-                        <a href="/savings" class="text-2xl">Savings</a>
+                        <a href="/savings" class="text-2xl transform duration-150 hover:scale-[1.05]">Savings</a>
                     </span>
-                    <span class="flex items-center mx-2 my-7 transition-colors hover:text-blue-600">
+                    <span class="flex items-center mx-2 my-7">
                         <i class="fa-solid text-2xl fa-gear mr-3"></i>
-                        <a href="/settings" class="text-2xl">Settings</a>
+                        <a href="/settings" class="text-2xl transform duration-150 hover:scale-[1.05]">Settings</a>
                     </span>
                 </div>
             </div>
+            <button type="button" class="px-4 py-2 m-6 rounded-md text-3xl
+            absolute top-0 left-0 z-[99] cursor:pointer bg-white border md:hidden"
+            id="openMobileNavbar">
+                <i class="fa-solid fa-bars"></i>
+            </button>
 
-            <div class="main flex-1 h-full">
-                <button type="button" class="px-4 py-2 m-4 rounded-md text-3xl
-                absolute top-0 left-0 z-[99] cursor:pointer bg-white border md:hidden"
-                id="openMobileNavbar">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-                
+            <div class="main flex-1 h-full overflow-y-auto overflow-x-hidden">
                 {% block main %}{% endblock %}
             </div>
         </div>

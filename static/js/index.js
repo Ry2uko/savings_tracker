@@ -1,16 +1,13 @@
 /* TO DO:
-- (15/11/23) /savings
-  - TODO: edit saving button & modal
-  - TODO: modal (functions, init, etc.)
-  - TODO: modal inputs
-  - TODO: handling modal inputs (validation, submitting, and after submit)
-  - TODO: chartjs test
-
+- (18/11/23-19/11/23)
+  - TODO: /settings
+    - TODO: edit saving button & modal
+    - TODO: modal (functions, init, etc.)
+    - TODO: modal inputs
+    - TODO: handling modal inputs (validation, submitting, and after submit)
 */
 
 /* (NEXT) 
-- stats
-- settings
 - bug checking & testing
 - video making
 */
@@ -25,11 +22,19 @@ const CURRENCIES = {
   "GBP": "£",
 };
 
+/* 
+  no number: bgColor
+  -2: textColor 
+*/
 const COLORS = {
   'blue': '#2563eb',
+  'blue-2': '#3b82f6',
   'yellow': '#f6bb09',
+  'yellow-2': '#FACC15',
   'green': '#22C55E',
+  'green-2': '#16A34A',
   'red': '#ef4444',
+  'red-2': '#DC2626',
   'gray': '#333'
 };
 
@@ -118,6 +123,15 @@ function toggleModal(modalId, ms=modalAnimMS, cb) {
       if (cb) cb();
     });
   }
+}
+
+function formatDate(timestamp) {
+  /* format date to something like this format -> MONTH DAY, YEAR */
+
+  let timestampDate = new Date(timestamp.slice(0, timestamp.length-4));
+  let formattedDate = timestampDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  
+  return formattedDate;
 }
 
 function validateCurrency(currency) {

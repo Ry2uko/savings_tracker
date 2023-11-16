@@ -1,6 +1,12 @@
 let savingData;
 
 $(function(){
+  let savingsAnchor = $('a[href="/savings"]');
+  savingsAnchor.eq(0).removeClass('hover:scale-[1.05]').css('backgroundColor', COLORS['blue']);
+  savingsAnchor.eq(0).css('color', '#fff');
+  savingsAnchor.eq(1).removeClass('hover:scale-[1.05]').css('color', COLORS['blue']);
+  savingsAnchor.eq(1).prev().css('color', COLORS['blue']);
+
   sessionRequest.then(sessionData => {
     savingData = sessionData;
 
@@ -14,8 +20,8 @@ $(function(){
     $('#formCurrencyLabel').val(savingCurrency)
     $(`.saving-item[data-saving-id='${savingData.id}']`).addClass('active');
     
-  }).catch(() => {
-    console.log('no session loaded :D');
+  }).catch(err => {
+    console.log(err);
   });
 
   // Event listeners

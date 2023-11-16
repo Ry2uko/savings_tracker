@@ -84,6 +84,27 @@ body, html {
     font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 
+#statsContainer .history-items-container .history-item {
+    display: flex;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+#statsContainer .history-items-container span.item-date {
+    flex: 1 1 0%;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 1.2rem;
+}
+
+#statsContainer .history-items-container span.item-amount {
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 1.2rem;
+    max-width: 200px;
+    overflow-x: auto;
+}
+
 /* sm */
 @media screen and (min-width: 480px) {
     #homeContainer #savingProgress {
@@ -112,6 +133,15 @@ body, html {
     .modal.modal-sm {
         height: 250px;
     }
+
+    #statsContainer .history-items-container span.item-date {
+        font-size: 1.3rem;
+    }
+    
+    #statsContainer .history-items-container span.item-amount {
+        font-size: 1.3rem;
+    }
+    
 }
 
 /* lg */
@@ -119,5 +149,13 @@ body, html {
     #homeContainer #savingProgress {
         width: 520px !important;
         height: 520px !important;
+    }
+
+    #statsContainer .history-items-container span.item-date {
+        font-size: 1.4rem;
+    }
+    
+    #statsContainer .history-items-container span.item-amount {
+        font-size: 1.4rem;
     }    
 }

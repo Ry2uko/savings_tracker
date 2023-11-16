@@ -2,6 +2,12 @@ let savingData;
 let bar;
 
 $(function(){
+  let homeAnchor = $('a[href="/home"]');
+  homeAnchor.eq(0).removeClass('hover:scale-[1.05]').css('backgroundColor', COLORS['blue']);
+  homeAnchor.eq(0).css('color', '#fff');
+  homeAnchor.eq(1).removeClass('hover:scale-[1.05]').css('color', COLORS['blue']);
+  homeAnchor.eq(1).prev().css('color', COLORS['blue']);
+
   sessionRequest.then(sessionData => {
     savingData = sessionData;
     initializeHome(sessionData);

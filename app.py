@@ -71,7 +71,7 @@ def session_route():
         if 'saving_id' in session:
             saving_data = db.session.get(Saving, session['saving_id'])
             
-            saving_data_history = parse_history(saving_data.history)
+            saving_data_history = saving_data.history.split(',') if saving_data.history else []
             saving = {
                 'amount_goal': saving_data.amount_goal,
                 'amount_saved': saving_data.amount_saved,
@@ -206,7 +206,6 @@ def savings_api():
             if 'withdrawed_amount' in request.json or 'amount_saved' in request.json:
                 return handle_err('added_amount, withdrawed_amount, or amount_saved cannot be used together.')
 
-            # handle if goal is already completed
             if saving.is_goal_completed:
                 return handle_err('Amount goal has already been reached.')
 
@@ -219,7 +218,13 @@ def savings_api():
                 return handle_err('Invalid added amount.')
 
             added_amount = round(added_amount, 2)
-            saving.history = append_to_history(saving.history, added_amount, 'add')
+
+            amount_to_add = added_amount
+            if (saving.amount_saved + added_amount) >= saving.amount_goal:
+                amount_to_add = saving.amount_goal - saving.amount_saved
+                
+            saving.history = append_to_history(saving.history, amount_to_add, 'add')
+
             saving.amount_saved += added_amount
             saving.amount_saved = round(saving.amount_saved, 2)
 
@@ -312,7 +317,6 @@ def savings_api():
             except ValueError:
                 return handle_err('Invalid amount goal.')
             
-            # handle when goal is already completed
             if saving.is_goal_completed:
                 saving.is_goal_completed = False
                 saving.goal_completed_date = None
@@ -362,7 +366,7 @@ def saving_api(id):
         return handle_err('Id not found.')
     saving_data = saving_schema.dump(saving)
 
-    saving_data['history'] = parse_history(saving_data['history'])
+    saving_data['history'] = saving_data['history'].split(',') if saving_data['history'] else []
 
     return jsonify({ 'saving': saving_data }), 200
 
@@ -377,43 +381,6 @@ def page_not_found(e):
 def handle_err(msg, status=400):
     """Return error object"""
     return (jsonify({'error': msg}), status)
-
-
-def parse_history(history):
-    """ Parse history to an object (later used for chartjs) """
-
-    history = history.split(',') if history else []
-    history_format = re.compile(r'(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}):([+-~])(\d+\.\d+)')
-    parsed_history = []
-
-    amount_saved = 0
-
-    for entry in history:
-        matched = history_format.match(entry)
-
-        if matched:
-            timestamp, transaction_type, amount = matched.groups()
-
-            try:
-                amount = float(amount)
-            except ValueError:
-                print('Failed to parse history: ValueError')
-                return []
-
-            if transaction_type == '+':
-                amount_saved += amount
-            elif transaction_type == '-':
-                amount_saved -= amount
-            else:
-                amount_saved = amount
-
-            amount_saved = round(amount_saved, 2)
-            parsed_history.append({
-                'timestamp': timestamp,
-                'amount': amount_saved
-            });
-
-    return parsed_history
 
 
 def append_to_history(history, amount, append_type='edit'):
