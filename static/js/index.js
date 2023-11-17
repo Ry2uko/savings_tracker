@@ -1,17 +1,3 @@
-/* TO DO:
-- (18/11/23-19/11/23)
-  - TODO: /edit
-    - TODO: Edit saving name
-    - TODO: Edit amount saved
-    - TODO: Edit currency
-    - TODO: Edit amount goal
-*/
-
-/* (NEXT) 
-- bug checking & testing
-- video making
-*/
-
 const CURRENCIES = {
   "USD": "$",
   "CAD": "$",

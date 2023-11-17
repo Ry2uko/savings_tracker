@@ -13,7 +13,7 @@
             <div class="header-container mx-7 flex items-center md:mx-10">
                 <h2 class="font-yanone-kaffeesatz text-[3rem]">Stats</h2>
             </div>
-            <div class="main-details-container flex flex-col items-center">
+            <div class="main-details-container flex flex-col items-center relative">
                 <div class="details-container max-w-[1080px] bg-white drop-shadow-md rounded-md 
             w-[95%] md:w-[90%] lg:w-[80%] my-6">
                 <div class="details-heading-container rounded-t-md flex
@@ -107,6 +107,10 @@
                 <div class="history-alt-container w-[95%] bg-white px-6 py-4 
                 rounded-md my-6 drop-shadow-md h-[600px] overflow-y-auto md:w-[90%]
                 lg:w-[80%]">
+                    <button class="absolute text-[2.1rem] top-0 right-0 my-4 mx-7
+                    text-slate-900" id="groupByDay">
+                        <i class="fa-regular fa-sun"></i>
+                    </button>
                     <h4 class="text-[2.6rem] font-yanone-kaffeesatz">History</h4>
                     <div class="history-items-container mt-4"></div>
                 </div>

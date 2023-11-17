@@ -19,8 +19,9 @@ $(function(){
 
 // Helper functions
 function initializeStats(saving) {
-  let parsedSavingHistoryA = parseHistoryAddedAmount(saving.history, 30);
-  let parsedSavingHistoryB = parseHistoryAmountSaved(saving.history, 60);
+  let parsedSavingHistoryA = parseHistoryAddedAmount(saving.history);
+  let parsedSavingHistoryB = parseHistoryAmountSaved(saving.history);
+  let parsedSavingHistoryC = parseHistoryAddedAmountPerAmountSaved(parsedSavingHistoryB);
 
   // Chart
   let accumAmount = 0;
@@ -102,7 +103,22 @@ function initializeStats(saving) {
 
   $('.stats-container').removeClass('hidden').addClass('flex');
   displayDetails(saving, calculatedHistory);
+
+  $('.history-alt-container').attr('data-history', 'timestamp');
   displayHistory(parsedSavingHistoryA, saving['currency'], saving['amount_goal']);
+
+  // Event listeners
+  $('#groupByDay').on('click', function(){
+    if ($('.history-alt-container').attr('data-history') === 'timestamp') {
+      $(this).find('i').attr('class', 'fa-solid fa-sun');
+      $('.history-alt-container').attr('data-history', 'daily');
+      displayHistory(parsedSavingHistoryC, saving['currency'], saving['amount_goal']);
+    } else {
+      $(this).find('i').attr('class', 'fa-regular fa-sun');
+      $('.history-alt-container').attr('data-history', 'timestamp');
+      displayHistory(parsedSavingHistoryA, saving['currency'], saving['amount_goal']);
+    }
+  })
 }
 
 // Helper functions
@@ -209,6 +225,7 @@ function displayHistory(history, currency, savingAmountGoal) {
     }
   }
 
+  $('.history-items-container').empty();
   for (let i = 0; i < history.length; i++) {
     let timestamp = history[i].timestamp;
     let amount = history[i].amount;
@@ -223,7 +240,6 @@ function displayHistory(history, currency, savingAmountGoal) {
     </div>
     `);
   }
-  
 }
 
 function calculateHistory(history) {
@@ -273,7 +289,7 @@ function calculateHistory(history) {
   };
 }
 
-function parseHistoryAddedAmount(history, limit) {
+function parseHistoryAddedAmount(history, limit=30) {
   /* parse history for added_amount (has duplicate timestamps) */ 
 
   const history_format = /(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}):([+-~])(\d+(\.\d+)?)/;
@@ -292,10 +308,10 @@ function parseHistoryAddedAmount(history, limit) {
   }
 
   // new history goes first
-  return parsed_history.reverse().slice(-limit);
+  return parsed_history.reverse().slice(0, limit);
 }
 
-function parseHistoryAmountSaved(history, limit) {
+function parseHistoryAmountSaved(history, limit=60) {
   /* parse history for each day (amount_saved) */
 
   const history_format = /(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}):([+-~])(\d+(\.\d+)?)/;
@@ -329,4 +345,24 @@ function parseHistoryAmountSaved(history, limit) {
   }
 
   return parsed_history.slice(-limit);
+}
+
+function parseHistoryAddedAmountPerAmountSaved(history) {
+  /* parse history for added amount per amount saved (how much increased/decreased per day) */
+
+  const parsedHistory = [];
+
+  let prevAmount = 0;
+  for (let i = 0; i < history.length; i++) {
+    let timestamp = history[i].timestamp;
+    let amount = Math.round((history[i].amount - prevAmount) * 100) / 100;
+
+    let transaction = '+';
+    if (amount < 0) transaction = '-';
+    parsedHistory.push({ timestamp, transaction, amount });
+
+    prevAmount = history[i].amount;
+  }
+
+  return parsedHistory.reverse();
 }

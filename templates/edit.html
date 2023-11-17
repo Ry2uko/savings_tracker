@@ -9,12 +9,68 @@
 
 {% block main %}
     <div id="editContainer" class="flex flex-col h-full py-8 overflow-y-auto mt-[4rem] md:mt-0">
-        <div class="edit-container hidden flex-col items-center">
-            <div class="header-container mx-7 flex items-center md:mx-10">
-                <h2 class="font-yanone-kaffeesatz text-[3rem] flex-1">Edit</h2>
+        <div class="edit-container hidden flex-col">
+            <div class="header-container mx-7 flex md:mx-10">
+                <h2 class="font-yanone-kaffeesatz text-[3rem] flex-1">Edit Saving</h2>
             </div>
-            <div class="main-edit-container">
-                
+            <div class="main-edit-container max-w-[1080px] mx-auto bg-white 
+            rounded-md drop-shadow-md my-2 w-[95%] md:my-6 md:w-[90%] lg:w-[80%]">
+                <div class="form-container flex flex-col py-8 px-6">
+                    <div class="input-group flex flex-col">
+                        <label for="savingName" class="text-[1.5rem] font-lato
+                        mb-2">Name</label>
+                        <input type="text" id="savingName" class="bg-white border
+                        border-slate-300 rounded-md py-3 px-4 text-[1.46rem]
+                        focus:outline-none focus:border-slate-600" />
+                    </div>
+                    <div class="input-group flex flex-col mt-6">
+                        <label for="savingAmountGoal" class="text-[1.5rem] font-lato
+                        mb-2">Amount Goal</label>
+                        <div class="input-currency-group flex">
+                            <input type="text" class="savingCurrency bg-slate-100 border-l
+                            border-t border-b border-slate-300 rounded-l-md py-3 text-center w-[15%] text-[1.8rem]
+                          text-slate-500 min-w-[40px] max-w-[66px] md:w-[12%]" value="$" disabled>
+                            <input type="text" id="savingAmountGoal" class=" bg-white 
+                            border border-slate-300 rounded-r-md py-3 px-4 text-[1.46rem] w-[85%]
+                            focus:outline-none focus:border-slate-600 md:w-[88%]" />
+                        </div>
+                    </div>
+                    <div class="input-group flex flex-col mt-6">
+                        <label for="savingAmountSaved" class="text-[1.5rem] font-lato
+                        mb-2">
+                            Amount Saved 
+                            <span class="tooltip text-[1rem] ml-1 text-yellow-500
+                            relative inline-block"
+                            title="">
+                                <span class="tooltipText invisible w-[220px] bg-yellow-500 text-black
+                                text-center rounded-md px-2 py-1 absolute z-[95] text-[0.85rem]
+                                font-noto-sans left-[150%] top-[-0.4rem]">Saving history may be affected</span>
+                                <i class="fa-solid fa-circle-info"></i>
+                            </span>
+                        </label>
+                        <div class="input-currency-group flex">
+                            <input type="text" class="savingCurrency bg-slate-100 border-l
+                            border-t border-b border-slate-300 rounded-l-md py-3 text-center w-[15%] text-[1.8rem]
+                          text-slate-500 min-w-[40px] max-w-[66px] md:w-[12%]" value="$" disabled>
+                            <input type="text" id="savingAmountSaved" class=" bg-white 
+                            border border-slate-300 rounded-r-md py-3 px-4 text-[1.46rem] w-[85%]
+                            focus:outline-none focus:border-slate-600 md:w-[88%]" />
+                        </div>
+                    </div>
+                    <div class="input-group flex flex-col mt-6">
+                        <label for="savingCurrency" class="text-[1.5rem] font-lato
+                        mb-2">Currency</label>
+                        <select id="savingCurrency" class="bg-white border
+                        border-slate-300 rounded-md py-3 px-4 text-[1.46rem]
+                        focus:outline-none focus:border-slate-600"></select>
+                    </div>
+                    <div class="button-group flex justify-end mt-[3rem]">
+                        <button type="button" id="cancelChanges" class="bg-white
+                        py-1 px-4 text-[1.5rem] rounded-md border border-gray-700">Cancel</button>
+                        <button type="button" id="saveChanges" class="bg-green-500
+                        py-1 px-6 ml-4 text-[1.5rem] rounded-md border border-green-500">Save</button>
+                    </div>
+                </div>
             </div>
         </div>
         <span class="none-loaded hidden font-lato text-slate-500 text-2xl text-center mt-[2rem]">No saving loaded.</span>

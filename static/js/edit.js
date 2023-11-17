@@ -19,5 +19,38 @@ $(function(){
 
 // Helper functions
 function initializeEdit(saving) {
-  $('.stats-container').removeClass('hidden').addClass('flex');
+  displayValues(saving);
+  $('.edit-container').removeClass('hidden').addClass('flex');
+
+  // Event listeners
+  $('#cancelChanges').on('click', () => { location.reload(); });
+}
+
+function displayValues(saving) {
+  let savingName = saving['name'];
+  let savingAmountGoal = saving['amount_goal'];
+  let savingAmountSaved = saving['amount_saved'];
+
+  const supportedCurrencies = Object.keys(CURRENCIES);
+  let savingCurrency = saving['currency'].toUpperCase();
+  if (!supportedCurrencies.includes(savingCurrency)) {
+    savingCurrency = "USD";
+    console.error('Invalid currency');
+  }
+
+  // display values
+  $('#savingName').val(savingName);
+  $('#savingAmountGoal').val(savingAmountGoal);
+  $('#savingAmountSaved').val(savingAmountSaved);
+  $('.savingCurrency').val(CURRENCIES[savingCurrency]);
+  
+  for (let currency in CURRENCIES) {
+    if (currency == savingCurrency) {
+      $('#savingCurrency').append(`<option selected>${currency} (${CURRENCIES[currency]})</option>`)
+    } else {
+      $('#savingCurrency').append(`<option>${currency} (${CURRENCIES[currency]})</option>`)
+
+    }
+    
+  }
 }

@@ -105,6 +105,21 @@ body, html {
     overflow-x: auto;
 }
 
+#editContainer span.tooltip:hover span.tooltipText {
+    visibility: visible;
+}
+
+#editContainer span.tooltipText::after {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent var(--yellow) transparent transparent;
+}
+
 /* sm */
 @media screen and (min-width: 480px) {
     #homeContainer #savingProgress {
