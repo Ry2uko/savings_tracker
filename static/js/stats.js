@@ -95,7 +95,7 @@ function initializeStats(saving) {
   };
   const myChart = new Chart($('#chart')[0], chartOptions);
 
-  const calculatedHistory = calculateHistory(parsedSavingHistoryA);
+  const calculatedHistory = calculateHistory(parsedSavingHistoryA.slice().reverse());
 
   $('.stats-container').removeClass('hidden').addClass('flex');
   displayDetails(saving, calculatedHistory);
@@ -108,7 +108,7 @@ function initializeStats(saving) {
     if ($('.history-alt-container').attr('data-history') === 'timestamp') {
       $(this).find('i').attr('class', 'fa-solid fa-sun');
       $('.history-alt-container').attr('data-history', 'daily');
-      console.log(parsedSavingHistoryC);
+
       displayHistory(parsedSavingHistoryC, saving['currency'], saving['amount_goal']);
     } else {
       $(this).find('i').attr('class', 'fa-regular fa-sun');
