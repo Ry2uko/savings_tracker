@@ -27,6 +27,3 @@ Ready to save?
 
 
 ![Preview 6](/static/img/preview6.png)
-
-
-![Preview 7](/static/img/preview7.png)
