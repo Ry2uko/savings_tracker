@@ -109,6 +109,7 @@ function displayValues(saving) {
   $('#savingAmountSaved').val(savingAmountSaved.toFixed(2));
   $('.savingCurrency').val(CURRENCIES[savingCurrency]);
   
+  $('#savingCurrency').empty()
   for (let currency in CURRENCIES) {
     if (currency == savingCurrency) {
       $('#savingCurrency').append(`<option selected>${currency} (${CURRENCIES[currency]})</option>`)

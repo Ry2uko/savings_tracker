@@ -536,6 +536,10 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.pointer-events-none{
+  pointer-events: none;
+}
+
 .invisible{
   visibility: hidden;
 }
@@ -781,6 +785,10 @@ video {
   height: 100%;
 }
 
+.h-\[72px\]{
+  height: 72px;
+}
+
 .w-4\/12{
   width: 33.333333%;
 }
@@ -815,6 +823,22 @@ video {
 
 .w-full{
   width: 100%;
+}
+
+.w-\[25\%\]{
+  width: 25%;
+}
+
+.w-\[75\%\]{
+  width: 75%;
+}
+
+.w-2\/4{
+  width: 50%;
+}
+
+.w-1\/4{
+  width: 25%;
 }
 
 .min-w-\[40px\]{
@@ -1336,6 +1360,10 @@ video {
 .text-xl{
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+
+.text-\[1\.2rem\]{
+  font-size: 1.2rem;
 }
 
 .text-black{

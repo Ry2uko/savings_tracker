@@ -6,14 +6,7 @@ $(function(){
   savingsAnchor.eq(1).prev().css('color', COLORS['blue']);
 
   sessionRequest.then(sessionData => {
-    let savingCurrency = validateCurrency(sessionData['currency']);
-    if (savingCurrency === null) {
-      savingCurrency = "$";
-      console.error('Invalid currency');
-    }
-
     // default
-    $('#formCurrencyLabel').val(savingCurrency)
     $(`.saving-item[data-saving-id='${sessionData.id}']`).addClass('active');
     
   }).catch(err => {
