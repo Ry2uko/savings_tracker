@@ -749,6 +749,14 @@ video {
   margin-top: 4rem;
 }
 
+.ml-6{
+  margin-left: 1.5rem;
+}
+
+.ml-5{
+  margin-left: 1.25rem;
+}
+
 .block{
   display: block;
 }
@@ -1056,6 +1064,11 @@ video {
 .border-slate-400{
   --tw-border-opacity: 1;
   border-color: rgb(148 163 184 / var(--tw-border-opacity));
+}
+
+.border-red-500{
+  --tw-border-opacity: 1;
+  border-color: rgb(239 68 68 / var(--tw-border-opacity));
 }
 
 .border-b-slate-200{

@@ -19,7 +19,24 @@ function initializeEdit(saving) {
   $('.edit-container').removeClass('hidden').addClass('flex');
 
   // Event listeners
-  $('#cancelChanges').on('click', () => { location.reload(); });
+  $('#deleteSaving').on('click', () => { 
+    if (confirm('Are you sure you want to delete this saving?')) {
+      fetch('/savings/api', {
+        'method': 'DELETE',
+        'headers': {
+          'Content-Type': 'application/json',
+        },
+        'body': JSON.stringify({
+          'id': saving['id'],
+        }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) throw new Error(data.error);
+        location.replace('/home');
+      });
+    } 
+  });
 
   $('#saveChanges').on('click', () => {
     const handleFormErr = errMsg => {
@@ -62,7 +79,6 @@ function initializeEdit(saving) {
     if (!savingCurrency in CURRENCIES) {
       return handleFormErr('Invalid currency.');
     }
-
 
     // Submit
     const reqBody = {
@@ -115,8 +131,6 @@ function displayValues(saving) {
       $('#savingCurrency').append(`<option selected>${currency} (${CURRENCIES[currency]})</option>`)
     } else {
       $('#savingCurrency').append(`<option>${currency} (${CURRENCIES[currency]})</option>`)
-
     }
-    
   }
 }

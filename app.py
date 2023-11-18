@@ -354,6 +354,8 @@ def savings_api():
         db.session.delete(saving)
         db.session.commit()
 
+        del session['saving_id']
+
         saving_data = saving_schema.dump(saving)
         return jsonify({ 'saving': saving_data }), 200
 
