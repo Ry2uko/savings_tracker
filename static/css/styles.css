@@ -105,7 +105,7 @@ body, html {
     overflow-x: auto;
 }
 
-#editContainer span.tooltip:hover span.tooltipText {
+#editContainer span.tooltip:hover > span.tooltipText {
     visibility: visible;
 }
 
@@ -117,7 +117,14 @@ body, html {
     margin-top: -5px;
     border-width: 5px;
     border-style: solid;
+}
+
+#editContainer span#tooltipAmountSaved span.tooltipText::after {
     border-color: transparent var(--yellow) transparent transparent;
+}
+
+#editContainer span#tooltipAmountGoal span.tooltipText::after {
+    border-color: transparent var(--red) transparent transparent;
 }
 
 /* sm */

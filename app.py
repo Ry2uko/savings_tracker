@@ -30,7 +30,7 @@ class Saving(db.Model):
     amount_goal = db.Column(db.Integer, nullable=False)
     created_date = db.Column(db.DateTime, default=datetime.now)
     goal_completed_date = db.Column(db.DateTime)
-    currency = db.Column(db.String, default='PHP')
+    currency = db.Column(db.String, default='USD')
     is_goal_completed = db.Column(db.Boolean, default=False)
     history = db.Column(db.String, default='')
 
@@ -310,7 +310,7 @@ def savings_api():
 
             try: 
                 amount_goal = float(amount_goal)
-                if amount_goal <= 0:
+                if amount_goal <= 1:
                     raise ValueError
                 elif amount_goal <= saving.amount_saved:
                     return handle_err('Amount goal must be higher than amount saved.')
@@ -322,6 +322,7 @@ def savings_api():
                 saving.goal_completed_date = None
 
             saving.amount_goal = amount_goal
+            saving.history = ''
 
         if 'currency' in request.json:
             currency = request.json['currency']
@@ -330,7 +331,7 @@ def savings_api():
             elif currency.upper() not in supported_currency_codes:
                 return handle_err(f"Currency not supported. Supported currencies: {', '.join(supported_currency_codes)}")
             
-            saving.currency = currency.upper()
+            saving.currency = currency.upper()  
 
         db.session.commit()
 
@@ -418,6 +419,18 @@ def sort_savings(savings):
         return (in_progress, empty, completed)
     
     return sorted(savings, key=sort_result, reverse=True)
+
+
+def convert_currency(amount, from_currency='USD', to_currency='PHP'):
+    try:
+        currency_rates = CurrencyRates()
+        exchange_rate = currency_rates.get_rates(from_currency, to_currency)
+        converted_amount = round(amount * exchange_rate, 2)
+
+        return converted_amount
+    except RatesNotAvailableError as e:
+        print(f"Error: {e}")
+        return None
 
 
 if __name__ == '__main__':

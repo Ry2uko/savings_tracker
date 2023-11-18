@@ -47,7 +47,7 @@ $(function(){
 
   $('.submitModifyAmountForm').on('click', () => {
     const handleFormErr = errMsg => {
-      $('#addSavingErrorText').text(errMsg).removeClass('hidden');
+      $('#modifySavingErrorText').text(errMsg).removeClass('hidden');
       return;
     };
 

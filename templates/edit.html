@@ -25,7 +25,17 @@
                     </div>
                     <div class="input-group flex flex-col mt-6">
                         <label for="savingAmountGoal" class="text-[1.5rem] font-lato
-                        mb-2">Amount Goal</label>
+                        mb-2">
+                            Amount Goal
+                            <span class="tooltip text-[1rem] ml-1 text-red-500
+                            relative inline-block"
+                            id="tooltipAmountGoal">
+                                <span class="tooltipText invisible w-[180px] bg-red-500 text-white
+                                text-center rounded-md px-2 py-1 absolute z-[95] text-[0.85rem]
+                                font-noto-sans left-[150%] top-[-0.4rem]">Will reset saving history</span>
+                                <i class="fa-solid fa-circle-info"></i>
+                            </span>
+                        </label>
                         <div class="input-currency-group flex">
                             <input type="text" class="savingCurrency bg-slate-100 border-l
                             border-t border-b border-slate-300 rounded-l-md py-3 text-center w-[15%] text-[1.8rem]
@@ -40,11 +50,10 @@
                         mb-2">
                             Amount Saved 
                             <span class="tooltip text-[1rem] ml-1 text-yellow-500
-                            relative inline-block"
-                            title="">
-                                <span class="tooltipText invisible w-[220px] bg-yellow-500 text-black
+                            relative inline-block" id="tooltipAmountSaved">
+                                <span class="tooltipText invisible w-[180px] bg-yellow-500 text-black
                                 text-center rounded-md px-2 py-1 absolute z-[95] text-[0.85rem]
-                                font-noto-sans left-[150%] top-[-0.4rem]">Saving history may be affected</span>
+                                font-noto-sans left-[150%] top-[-0.4rem]">Will affect saving history</span>
                                 <i class="fa-solid fa-circle-info"></i>
                             </span>
                         </label>
@@ -64,6 +73,8 @@
                         border-slate-300 rounded-md py-3 px-4 text-[1.46rem]
                         focus:outline-none focus:border-slate-600"></select>
                     </div>
+                    <span class="hidden text-center text-2xl font-noto-sans
+             text-red-600 error-text mt-6" id="editSavingErrorText">This is the last placeholder :D</span>
                     <div class="button-group flex justify-end mt-[3rem]">
                         <button type="button" id="cancelChanges" class="bg-white
                         py-1 px-4 text-[1.5rem] rounded-md border border-gray-700">Cancel</button>

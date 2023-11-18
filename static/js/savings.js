@@ -1,5 +1,3 @@
-let savingData;
-
 $(function(){
   let savingsAnchor = $('a[href="/savings"]');
   savingsAnchor.eq(0).removeClass('hover:scale-[1.05]').css('backgroundColor', COLORS['blue']);
@@ -8,9 +6,7 @@ $(function(){
   savingsAnchor.eq(1).prev().css('color', COLORS['blue']);
 
   sessionRequest.then(sessionData => {
-    savingData = sessionData;
-
-    let savingCurrency = validateCurrency(savingData['currency']);
+    let savingCurrency = validateCurrency(sessionData['currency']);
     if (savingCurrency === null) {
       savingCurrency = "$";
       console.error('Invalid currency');
@@ -18,10 +14,10 @@ $(function(){
 
     // default
     $('#formCurrencyLabel').val(savingCurrency)
-    $(`.saving-item[data-saving-id='${savingData.id}']`).addClass('active');
+    $(`.saving-item[data-saving-id='${sessionData.id}']`).addClass('active');
     
   }).catch(err => {
-    console.log(err);
+    console.err(err);
   });
 
   // Event listeners
@@ -41,8 +37,7 @@ $(function(){
 
     if (!savingName) {
       return handleFormErr('Name must not be empty.');
-    }
-    if (!savingAmountGoal) {
+    } else if (!savingAmountGoal) {
       return handleFormErr('Amount goal must not be empty.');
     }
 

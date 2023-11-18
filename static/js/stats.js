@@ -1,5 +1,3 @@
-let savingData;
-
 $(function(){
   let statsAnchor = $('a[href="/stats"]');
   statsAnchor.eq(0).removeClass('hover:scale-[1.05]').css('backgroundColor', COLORS['blue']);
@@ -8,8 +6,6 @@ $(function(){
   statsAnchor.eq(1).prev().css('color', COLORS['blue']);
 
   sessionRequest.then(sessionData => {
-    savingData = sessionData; 
-
     initializeStats(sessionData);
   }).catch(err => {
     console.error(err);
@@ -112,6 +108,7 @@ function initializeStats(saving) {
     if ($('.history-alt-container').attr('data-history') === 'timestamp') {
       $(this).find('i').attr('class', 'fa-solid fa-sun');
       $('.history-alt-container').attr('data-history', 'daily');
+      console.log(parsedSavingHistoryC);
       displayHistory(parsedSavingHistoryC, saving['currency'], saving['amount_goal']);
     } else {
       $(this).find('i').attr('class', 'fa-regular fa-sun');
@@ -358,7 +355,10 @@ function parseHistoryAddedAmountPerAmountSaved(history) {
     let amount = Math.round((history[i].amount - prevAmount) * 100) / 100;
 
     let transaction = '+';
-    if (amount < 0) transaction = '-';
+    if (amount < 0) {
+      amount = Math.abs(amount);
+      transaction = '-';
+    }
     parsedHistory.push({ timestamp, transaction, amount });
 
     prevAmount = history[i].amount;
