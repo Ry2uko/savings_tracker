@@ -39,4 +39,3 @@ Customize your savings details effortlessly. Edit the saving name, amount goal, 
 
 
 ![Preview 6](/static/img/preview6.png)
-
