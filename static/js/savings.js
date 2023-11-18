@@ -17,7 +17,7 @@ $(function(){
     $(`.saving-item[data-saving-id='${sessionData.id}']`).addClass('active');
     
   }).catch(err => {
-    console.err(err);
+    console.error(err);
   });
 
   // Event listeners
