@@ -436,4 +436,4 @@ def convert_currency(amount, from_currency='USD', to_currency='PHP'):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
