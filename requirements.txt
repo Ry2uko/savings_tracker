@@ -1,4 +1,4 @@
 flask
 flask-sqlalchemy
-flask-marshmallow
+marshmallow<4
 marshmallow-sqlalchemy
